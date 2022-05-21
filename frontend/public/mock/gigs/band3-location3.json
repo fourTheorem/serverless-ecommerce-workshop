@@ -1,0 +1,16 @@
+{
+  "id": "band3-location3",
+  "bandName": "Band 3",
+  "city": "City 3",
+  "year": "1963",
+  "date": "2019-01-03",
+  "venue": "Venue 3",
+  "collectionPointMap": "map-placeholder.png",
+  "collectionPoint": "New York, NY 10003, USA",
+  "collectionTime": "14:30",
+  "originalDate": "1977-02-05",
+  "capacity": 3000,
+  "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus nec porta libero, mattis luctus felis. Aliquam erat volutpat. Mauris auctor dictum est, non euismod lacus tincidunt id. Vivamus et libero tincidunt, luctus neque sed, aliquet ex. Vestibulum eu accumsan purus. Aliquam et tristique ligula. Nam laoreet odio vel nisl ultrices placerat. Etiam quis metus id elit porta lobortis ac vel nibh. Quisque eu tortor sem. Mauris gravida purus in leo ullamcorper feugiat. Fusce fringilla felis nec urna cursus efficitur. Donec in lectus molestie lorem aliquam pharetra at id ex. Proin id rutrum ligula. Nunc eu fringilla dolor. Proin sit amet lacus et quam sollicitudin volutpat. Pellentesque bibendum porta felis suscipit fringilla.\n\nNunc tincidunt lectus at odio dignissim placerat. Praesent fermentum at ligula vitae blandit. Sed rutrum vulputate libero in mollis. Morbi lacus quam, malesuada vitae fermentum non, tincidunt eu nisi. Mauris volutpat urna id mauris dapibus, a gravida enim venenatis. Curabitur et pulvinar sapien. Pellentesque dignissim turpis eu lorem consequat mattis non a velit.\n\nNam in vulputate leo. Aenean non eros ut ante viverra posuere in vel velit. Donec pulvinar feugiat nunc, eget cursus augue accumsan eget. Phasellus porttitor tincidunt nunc, nec mollis lacus porta eu. Aenean scelerisque tincidunt arcu eget malesuada. Suspendisse ac turpis sagittis, pellentesque risus ut, consequat massa. Nulla ultrices ante mattis erat luctus cursus. Aliquam sem diam, fermentum id placerat id, rutrum nec elit. Nunc malesuada tortor euismod sem pellentesque lacinia. Donec mi felis, convallis ac semper eu, molestie at lorem.",
+  "image": "band-placeholder.png",
+  "price": "1030"
+}

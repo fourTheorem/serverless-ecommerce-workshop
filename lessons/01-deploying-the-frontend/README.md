@@ -26,6 +26,15 @@ TODO: ...
   - Brief overview of the various sections and expected functionality
 
 
+Run locally:
+
+```bash
+npx http-server src/frontend -o
+```
+
+
+
+
 ## Create a bucket
 
 TODO: ...
