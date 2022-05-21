@@ -28,7 +28,7 @@ This workshop will explore the following topics
 - How to store unit of works on SQS
 - How to create background workers with AWS Lambda
 - ... and a lot of other useful things, like:
-  - Serverless Application Mode (SAM) and Cloudfront
+  - Serverless Application Model (SAM) and Cloudfront
   - AWS Roles, Policies and the security model in general
   - The AWS Command Line interface
   - Some bash tricks
@@ -45,7 +45,7 @@ Before getting started, make sure you have the following requirements:
  - [Node.js](https://nodejs.org) (v16 or higher)
  - A [bash](https://www.gnu.org/software/bash) compatible shell
  - [Docker](https://www.docker.com/)
- - [SAM / SAM Local](https://github.com/awslabs/aws-sam-local)
+ - [SAM / SAM Local](https://aws.amazon.com/serverless/sam/)
 
 
 ## Getting started
