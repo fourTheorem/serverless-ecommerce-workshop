@@ -40,7 +40,7 @@ This workshop will explore the following topics
 Before getting started, make sure you have the following requirements:
 
  - Your own [AWS account](https://aws.amazon.com/free)
- - An AWS user with Admin access and Programmatic Access ([See how to create one](/lessons/extra/CREATE_AWS_USER.md))
+ - An AWS user with Admin access and Programmatic Access
  - The [AWS Command Line Interface](https://aws.amazon.com/cli) installed and configured for your user
  - [Node.js](https://nodejs.org) (v16 or higher)
  - A [bash](https://www.gnu.org/software/bash) compatible shell
@@ -51,6 +51,8 @@ Before getting started, make sure you have the following requirements:
 ## Getting started
 
 TODO: ...
+
+[➡️ Lesson 01 - Deploying the frontend](/lessons/01-deploying-the-frontend/README.md)
 
 
 ## Contributing

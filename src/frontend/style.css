@@ -3226,7 +3226,6 @@ a.box:active {
   padding-right: calc(.625em - 1px);
   padding-top: calc(.375em - 1px);
   position: relative;
-  vertical-align: top;
   background-color: #fff;
   border-color: #dbdbdb;
   color: #363636;
