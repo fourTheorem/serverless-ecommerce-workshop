@@ -1,9 +1,10 @@
+import React from 'react'
 import logo from '../images/logo.svg'
 
-function Footer() {
-  return <footer className="footer" style={{ margin: "4em 0 0 0" }}>
+function Footer () {
+  return <footer className="footer" style={{ margin: '4em 0 0 0' }}>
     <div className="container">
-      <p><img src={logo} style={{ height: "1.8em" }} /></p>
+      <p><img src={logo} style={{ height: '1.8em' }} /></p>
       <div className="columns">
         <div className="column is-3">
           <div className="content">
@@ -25,14 +26,14 @@ function Footer() {
         <div className="column is-3">
           <div className="content">
             <small>
-              Built with <a href="http://bulma.io" target="_blank">Bulma</a>, <a href="https://reactjs.org/" target="_blank">React</a> &amp; other Open Source technologies.
+              Built with <a href="http://bulma.io" target="_blank" rel="noreferrer">Bulma</a>, <a href="https://reactjs.org/" target="_blank" rel="noreferrer">React</a> &amp; other Open Source technologies.
             </small>
           </div>
         </div>
         <div className="column is-3">
           <div className="content">
             <small>
-              When time travel will be generally available, remember to thank <a href="https://fourtheorem.com" target="_blank">fourTheorem</a> for making you rich with this awesome idea! ❤︎
+              When time travel will be generally available, remember to thank <a href="https://fourtheorem.com" target="_blank" rel="noreferrer">fourTheorem</a> for making you rich with this awesome idea! ❤︎
             </small>
           </div>
         </div>

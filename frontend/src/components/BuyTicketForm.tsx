@@ -1,7 +1,7 @@
-import React, { Fragment, useContext, useState } from "react"
-import { SubmitHandler, useForm } from "react-hook-form"
-import { SettingsContext } from "../settings"
-import { Gig } from "../types"
+import React, { Fragment, useContext, useState } from 'react'
+import { SubmitHandler, useForm } from 'react-hook-form'
+import { SettingsContext } from '../settings'
+import { Gig } from '../types'
 
 type BuyTicketFormData = {
   gigId: string,
@@ -36,10 +36,10 @@ const months = {
   Dec: 12
 }
 
-function BuyTicketForm(props: { gig: Gig }) {
+function BuyTicketForm (props: { gig: Gig }) {
   const { gig } = props
   const settings = useContext(SettingsContext)
-  const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm<BuyTicketFormData>();
+  const { register, handleSubmit, setValue, formState: { errors } } = useForm<BuyTicketFormData>()
 
   const [paymentInProgress, setPaymentInProgress] = useState(false)
   const [paymentResult, setPaymentResult] = useState<{}>()
@@ -115,13 +115,13 @@ function BuyTicketForm(props: { gig: Gig }) {
               <h4>Ticket info</h4>
             </div>
 
-            <input type="hidden" {...register("gigId", { required: true, value: gig.id })} />
+            <input type="hidden" {...register('gigId', { required: true, value: gig.id })} />
 
             <div className="field">
               <label htmlFor="name" className="label">Owner name</label>
               <div className="control">
                 <input
-                  {...register("name", { required: 'This field is required' })}
+                  {...register('name', { required: 'This field is required' })}
                   id="name"
                   className={`input ${errors.name ? 'is-danger' : ''}`}
                   type="text"
@@ -136,7 +136,7 @@ function BuyTicketForm(props: { gig: Gig }) {
               <label htmlFor="email" className="label">Email</label>
               <div className="control">
                 <input
-                  {...register("email", { required: 'This field is required', minLength: { value: 4, message: 'Insert a valid email' } })}
+                  {...register('email', { required: 'This field is required', minLength: { value: 4, message: 'Insert a valid email' } })}
                   id="email"
                   className={`input ${errors.email ? 'is-danger' : ''}`}
                   type="text"
@@ -157,7 +157,7 @@ function BuyTicketForm(props: { gig: Gig }) {
               <label htmlFor="nameOnCard" className="label">Name on card</label>
               <div className="control">
                 <input
-                  {...register("nameOnCard", { required: 'This field is required' })}
+                  {...register('nameOnCard', { required: 'This field is required' })}
                   id="nameOnCard"
                   className={`input ${errors.nameOnCard ? 'is-danger' : ''}`}
                   type="text"
@@ -172,7 +172,7 @@ function BuyTicketForm(props: { gig: Gig }) {
               <label htmlFor="cardNumber" className="label">Card Number</label>
               <div className="control">
                 <input
-                  {...register("cardNumber", {
+                  {...register('cardNumber', {
                     required: 'This field is required',
                     pattern: { value: /^[0-9]{12,19}$/, message: 'Please inser a valid card number' }
                   })}
@@ -193,7 +193,7 @@ function BuyTicketForm(props: { gig: Gig }) {
                   <div className="control">
                     <div className={`select ${errors.cardExpiryMonth ? 'is-danger' : ''}`}>
                       <select
-                        {...register("cardExpiryMonth", { required: 'This field is required' })}
+                        {...register('cardExpiryMonth', { required: 'This field is required' })}
                         id="cardExpiryMonth"
                         disabled={paymentInProgress}
                       >
@@ -211,7 +211,7 @@ function BuyTicketForm(props: { gig: Gig }) {
                   <div className="control">
                     <div className={`select ${errors.cardExpiryYear ? 'is-danger' : ''}`}>
                       <select
-                        {...register("cardExpiryYear", { required: 'This field is required' })}
+                        {...register('cardExpiryYear', { required: 'This field is required' })}
                         id="cardExpiryYear"
                         disabled={paymentInProgress}
                       >
@@ -228,7 +228,7 @@ function BuyTicketForm(props: { gig: Gig }) {
                   <label htmlFor="cardCVC" className="label">CVC</label>
                   <div className="control">
                     <input
-                      {...register("cardCVC", {
+                      {...register('cardCVC', {
                         required: 'This field is required',
                         pattern: { value: /^[0-9]{3,5}$/, message: 'Please insert a valid CVC' }
                       })}
@@ -248,13 +248,13 @@ function BuyTicketForm(props: { gig: Gig }) {
               <div className="control">
                 <label htmlFor="disclaimerAccepted" className="checkbox">
                   <input
-                    {...register("disclaimerAccepted", { required: 'This check is mandatory' })}
+                    {...register('disclaimerAccepted', { required: 'This check is mandatory' })}
                     id="disclaimerAccepted"
                     type="checkbox"
                     disabled={paymentInProgress}
                   />
                   {' '}I understand this is a demo site and that
-                  {' '}<strong>I don't have to use a real credit card</strong> I own!
+                  {' '}<strong>I don&apos;t have to use a real credit card</strong> I own!
                   No attempt to charge the card will be made anyway.
                   {errors.disclaimerAccepted && <p className="help is-danger">{errors.disclaimerAccepted.message}</p>}
                 </label>

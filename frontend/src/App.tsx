@@ -1,11 +1,12 @@
-import { Routes, Route } from "react-router-dom"
-import Footer from "./components/Footer"
-import Header from "./components/Header"
+import React from 'react'
+import { Routes, Route } from 'react-router-dom'
+import Footer from './components/Footer'
+import Header from './components/Header'
 import Gig from './routes/Gig'
 import Home from './routes/Home'
-import NotFound from "./routes/NotFound"
+import NotFound from './routes/NotFound'
 
-function App() {
+function App () {
   return <div id="app">
     <Header />
 

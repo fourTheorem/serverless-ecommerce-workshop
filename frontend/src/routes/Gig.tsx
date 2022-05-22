@@ -1,14 +1,14 @@
-import { Fragment, useContext, useEffect, useState } from "react"
-import { useParams, Link } from "react-router-dom"
-import BuyTicketForm from "../components/BuyTicketForm"
-import { SettingsContext } from "../settings"
-import { Gig } from "../types"
+import React, { Fragment, useContext, useEffect, useState } from 'react'
+import { useParams, Link } from 'react-router-dom'
+import BuyTicketForm from '../components/BuyTicketForm'
+import { SettingsContext } from '../settings'
+import { Gig } from '../types'
 
-function mapUrl(address: string) {
+function mapUrl (address: string) {
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`
 }
 
-function GigPage() {
+function GigPage () {
   const params = useParams()
   const settings = useContext(SettingsContext)
   const [loading, setLoading] = useState(true)
@@ -89,12 +89,12 @@ function GigPage() {
                     Time travel collection point
                   </p>
                   <div className="panel-block">
-                    <a href={mapUrl(gig.collectionPoint)} target="_blank">
+                    <a href={mapUrl(gig.collectionPoint)} target="_blank" rel="noreferrer">
                       <img src={`/images/${gig.collectionPointMap}`} alt="Collection point map" />
                     </a>
                   </div>
                   <div className="panel-block">
-                    <a href={mapUrl(gig.collectionPoint)} target="_blank">
+                    <a href={mapUrl(gig.collectionPoint)} target="_blank" rel="noreferrer">
                       {gig.collectionPoint}
                     </a>
                   </div>

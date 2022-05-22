@@ -1,9 +1,9 @@
-import { SettingsContext } from "../settings"
-import { useContext, useEffect, useState } from "react"
-import { Gig } from "../types"
-import GigsList from "../components/GigsList"
+import React, { useContext, useEffect, useState } from 'react'
+import { SettingsContext } from '../settings'
+import { Gig } from '../types'
+import GigsList from '../components/GigsList'
 
-function Home() {
+function Home () {
   const settings = useContext(SettingsContext)
   const [loading, setLoading] = useState(true)
   const [gigs, setGigs] = useState<Gig[]>([])
@@ -15,7 +15,7 @@ function Home() {
         let url = `${settings.apiBaseUrl}/gigs`
         if (!settings.apiBaseUrl) {
           console.warn('USING MOCK DATA, configure your apiBaseUrl')
-          url = `http://localhost:3000/mock/gigs.json`
+          url = 'http://localhost:3000/mock/gigs.json'
         }
         const response = await fetch(url)
         const loadedGigs = (await response.json()) as Gig[]

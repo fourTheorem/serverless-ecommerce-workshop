@@ -1,7 +1,8 @@
-import { Gig } from "../types"
-import GigCard from "./GigCard"
+import React from 'react'
+import { Gig } from '../types'
+import GigCard from './GigCard'
 
-function GigsList(props: { gigs: Gig[] }) {
+function GigsList (props: { gigs: Gig[] }) {
   const { gigs } = props
 
   return <div className="container">
@@ -14,8 +15,8 @@ function GigsList(props: { gigs: Gig[] }) {
 
       <div className="columns is-multiline">
         {gigs.map(gig => (
-          <div className="column is-one-third">
-            <GigCard key={gig.id} gig={gig} />
+          <div key={gig.id} className="column is-one-third">
+            <GigCard gig={gig} />
           </div>
         ))}
       </div>
