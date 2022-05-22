@@ -67,7 +67,7 @@ function BuyTicketForm (props: { gig: Gig }) {
       setPaymentError(undefined)
 
       let responseData = {}
-      if (!settings.apiBaseUrl) {
+      if (settings.mock) {
         console.warn('USING MOCK DATA, this will simulate a payment with a 50% chance to succeed')
         responseData = (await onSubmitMock()) as boolean
       } else {

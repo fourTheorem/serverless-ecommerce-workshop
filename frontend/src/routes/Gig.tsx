@@ -19,9 +19,9 @@ function GigPage () {
     (async () => {
       try {
         let url = `${settings.apiBaseUrl}/gigs/${params.id}`
-        if (!settings.apiBaseUrl) {
+        if (settings.mock) {
           console.warn('USING MOCK DATA, configure your apiBaseUrl')
-          url = `http://localhost:3000/mock/gigs/${params.id}.json`
+          url = `${settings.apiBaseUrl}/mock/gigs/${params.id}.json`
         }
         const response = await fetch(url)
         const loadedGig = (await response.json()) as Gig

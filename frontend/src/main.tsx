@@ -7,7 +7,7 @@ import { SettingsContext } from './settings'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <SettingsContext.Provider value={{ apiBaseUrl: null }}>
+    <SettingsContext.Provider value={{ apiBaseUrl: window.location.origin, mock: true }}>
       <BrowserRouter>
         <App />
       </BrowserRouter>

@@ -13,9 +13,9 @@ function Home () {
     (async () => {
       try {
         let url = `${settings.apiBaseUrl}/gigs`
-        if (!settings.apiBaseUrl) {
+        if (settings.mock) {
           console.warn('USING MOCK DATA, configure your apiBaseUrl')
-          url = 'http://localhost:3000/mock/gigs.json'
+          url = `${settings.apiBaseUrl}/mock/gigs.json`
         }
         const response = await fetch(url)
         const loadedGigs = (await response.json()) as Gig[]

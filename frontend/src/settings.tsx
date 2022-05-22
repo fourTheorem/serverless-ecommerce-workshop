@@ -1,5 +1,6 @@
 import React from 'react'
 
 export const SettingsContext = React.createContext({
-  apiBaseUrl: null
+  apiBaseUrl: '',
+  mock: false
 })
