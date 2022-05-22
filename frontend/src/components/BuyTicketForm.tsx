@@ -1,5 +1,19 @@
-import React, { Fragment, useState } from "react"
+import React, { Fragment, useContext, useState } from "react"
+import { SubmitHandler, useForm } from "react-hook-form"
+import { SettingsContext } from "../settings"
 import { Gig } from "../types"
+
+type BuyTicketFormData = {
+  gigId: string,
+  name: string,
+  email: string,
+  nameOnCard: string,
+  cardNumber: string,
+  cardExpiryMonth: string,
+  cardExpiryYear: string,
+  cardCVC: string,
+  disclaimerAccepted: boolean,
+}
 
 const now = new Date()
 const currentYear = now.getFullYear()
@@ -24,36 +38,68 @@ const months = {
 
 function BuyTicketForm(props: { gig: Gig }) {
   const { gig } = props
-
-
-  const [name, setName] = useState("")
-  const [email, setEmail] = useState("")
-  const [nameOnCard, setNameOnCard] = useState("")
-  const [cardNumber, setCardNumber] = useState("")
-  const [cardExpiryMonth, setCardExpiryMonth] = useState("")
-  const [cardExpiryYear, setCardExpiryYear] = useState("")
-  const [cardCVC, setCardCVC] = useState("")
-  const [disclaimerAccepted, setDisclaimerAccepted] = useState(false)
+  const settings = useContext(SettingsContext)
+  const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm<BuyTicketFormData>();
 
   const [paymentInProgress, setPaymentInProgress] = useState(false)
   const [paymentResult, setPaymentResult] = useState<{}>()
-  const [paymentError, setPaymentError] = useState<string>()
+  const [paymentError, setPaymentError] = useState<Error>()
+
+  const onSubmitMock = () => {
+    return new Promise((resolve, reject) => {
+      // can succeed or fail with 50% chance
+      const success = Math.random() >= 0.5
+
+      setTimeout(() => {
+        if (!success) {
+          return reject(new Error('Card declined'))
+        }
+
+        return resolve(true)
+      }, 2200)
+    })
+  }
+
+  const onSubmit: SubmitHandler<BuyTicketFormData> = async (formData) => {
+    try {
+      setPaymentInProgress(true)
+      setPaymentResult(undefined)
+      setPaymentError(undefined)
+
+      let responseData = {}
+      if (!settings.apiBaseUrl) {
+        console.warn('USING MOCK DATA, this will simulate a payment with a 50% chance to succeed')
+        responseData = (await onSubmitMock()) as boolean
+      } else {
+        const response = await fetch(`${settings.apiBaseUrl}/purchase`, { method: 'POST', body: JSON.stringify(formData) })
+        responseData = await response.json()
+      }
+
+      setPaymentInProgress(false)
+      setPaymentResult(responseData)
+      setValue('name', '')
+      setValue('email', '')
+    } catch (err) {
+      setPaymentInProgress(false)
+      setPaymentError(err as Error)
+    }
+  }
 
   const fillWithDemoData = (event: React.SyntheticEvent) => {
     event.preventDefault()
-    setName('Alex Smith')
-    setEmail('alexsmith@gmail.com')
-    setNameOnCard('Alex Smith')
-    setCardNumber('5454545454545454')
-    setCardExpiryMonth('5')
-    setCardExpiryYear(next5Years[3])
-    setCardCVC('123')
-    setDisclaimerAccepted(true)
+    setValue('name', 'Alex Smith')
+    setValue('email', 'alexsmith@gmail.com')
+    setValue('nameOnCard', 'Alex Smith')
+    setValue('cardNumber', '5454545454545454')
+    setValue('cardExpiryMonth', '5')
+    setValue('cardExpiryYear', next5Years[3])
+    setValue('cardCVC', '123')
+    setValue('disclaimerAccepted', true)
   }
 
   return (
     <Fragment>
-      <form>
+      <form method="POST" onSubmit={handleSubmit(onSubmit)}>
         <div className="columns">
           <div className="column is-7">
             <div className="content">
@@ -69,21 +115,20 @@ function BuyTicketForm(props: { gig: Gig }) {
               <h4>Ticket info</h4>
             </div>
 
-            <input type="hidden" v-model="payment.gig" />
+            <input type="hidden" {...register("gigId", { required: true, value: gig.id })} />
 
             <div className="field">
               <label htmlFor="name" className="label">Owner name</label>
               <div className="control">
                 <input
-                  onChange={e => { setName(e.target.value) }}
+                  {...register("name", { required: 'This field is required' })}
                   id="name"
-                  name="name"
-                  className='input'
+                  className={`input ${errors.name ? 'is-danger' : ''}`}
                   type="text"
                   disabled={paymentInProgress}
                   placeholder="e.g. Alex Smith"
-                  value={name}
                 />
+                {errors.name && <p className="help is-danger">{errors.name.message}</p>}
               </div>
             </div>
 
@@ -91,15 +136,14 @@ function BuyTicketForm(props: { gig: Gig }) {
               <label htmlFor="email" className="label">Email</label>
               <div className="control">
                 <input
-                  onChange={e => { setEmail(e.target.value) }}
+                  {...register("email", { required: 'This field is required', minLength: { value: 4, message: 'Insert a valid email' } })}
                   id="email"
-                  name="email"
-                  className='input'
+                  className={`input ${errors.email ? 'is-danger' : ''}`}
                   type="text"
                   disabled={paymentInProgress}
                   placeholder="e.g. alexsmith@gmail.com"
-                  value={email}
                 />
+                {errors.email && <p className="help is-danger">{errors.email.message}</p>}
               </div>
             </div>
 
@@ -113,15 +157,14 @@ function BuyTicketForm(props: { gig: Gig }) {
               <label htmlFor="nameOnCard" className="label">Name on card</label>
               <div className="control">
                 <input
-                  onChange={e => { setNameOnCard(e.target.value) }}
+                  {...register("nameOnCard", { required: 'This field is required' })}
                   id="nameOnCard"
-                  name="nameOnCard"
-                  className='input'
+                  className={`input ${errors.nameOnCard ? 'is-danger' : ''}`}
                   type="text"
                   disabled={paymentInProgress}
                   placeholder="e.g Alex Smith"
-                  value={nameOnCard}
                 />
+                {errors.nameOnCard && <p className="help is-danger">{errors.nameOnCard.message}</p>}
               </div>
             </div>
 
@@ -129,15 +172,17 @@ function BuyTicketForm(props: { gig: Gig }) {
               <label htmlFor="cardNumber" className="label">Card Number</label>
               <div className="control">
                 <input
-                  onChange={e => { setEmail(e.target.value) }}
+                  {...register("cardNumber", {
+                    required: 'This field is required',
+                    pattern: { value: /^[0-9]{12,19}$/, message: 'Please inser a valid card number' }
+                  })}
                   id="cardNumber"
-                  name="cardNumber"
-                  className='input'
+                  className={`input ${errors.cardNumber ? 'is-danger' : ''}`}
                   type="text"
                   disabled={paymentInProgress}
-                  placeholder="e.g. 1234 5678 9012 3456"
-                  value={cardNumber}
+                  placeholder="e.g. 1234567890123456"
                 />
+                {errors.cardNumber && <p className="help is-danger">{errors.cardNumber.message}</p>}
               </div>
             </div>
 
@@ -146,17 +191,17 @@ function BuyTicketForm(props: { gig: Gig }) {
                 <div className="field">
                   <label htmlFor="cardExpiryMonth" className="label">Expiry Month</label>
                   <div className="control">
-                    <select
-                      onChange={e => { setCardExpiryMonth(e.target.value) }}
-                      id="cardExpiryMonth"
-                      name="cardExpiryMonth"
-                      className='select'
-                      disabled={paymentInProgress}
-                      value={cardExpiryMonth}
-                    >
-                      <option value="" />
-                      {Object.entries(months).map(([name, i]) => <option key={i} value={i}>{i} - {name}</option>)}
-                    </select>
+                    <div className={`select ${errors.cardExpiryMonth ? 'is-danger' : ''}`}>
+                      <select
+                        {...register("cardExpiryMonth", { required: 'This field is required' })}
+                        id="cardExpiryMonth"
+                        disabled={paymentInProgress}
+                      >
+                        <option value="" />
+                        {Object.entries(months).map(([name, i]) => <option key={i} value={i}>{i} - {name}</option>)}
+                      </select>
+                      {errors.cardExpiryMonth && <p className="help is-danger">{errors.cardExpiryMonth.message}</p>}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -164,17 +209,17 @@ function BuyTicketForm(props: { gig: Gig }) {
                 <div className="field">
                   <label htmlFor="cardExpiryYear" className="label">Expiry Year</label>
                   <div className="control">
-                    <select
-                      onChange={e => { setCardExpiryYear(e.target.value) }}
-                      id="cardExpiryYear"
-                      name="cardExpiryYear"
-                      className='select'
-                      disabled={paymentInProgress}
-                      value={cardExpiryYear}
-                    >
-                      <option value="" />
-                      {next5Years.map(i => <option key={i} value={i}>{i}</option>)}
-                    </select>
+                    <div className={`select ${errors.cardExpiryYear ? 'is-danger' : ''}`}>
+                      <select
+                        {...register("cardExpiryYear", { required: 'This field is required' })}
+                        id="cardExpiryYear"
+                        disabled={paymentInProgress}
+                      >
+                        <option value="" />
+                        {next5Years.map(i => <option key={i} value={i}>{i}</option>)}
+                      </select>
+                      {errors.cardExpiryYear && <p className="help is-danger">{errors.cardExpiryYear.message}</p>}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -183,15 +228,17 @@ function BuyTicketForm(props: { gig: Gig }) {
                   <label htmlFor="cardCVC" className="label">CVC</label>
                   <div className="control">
                     <input
-                      onChange={e => { setCardCVC(e.target.value) }}
+                      {...register("cardCVC", {
+                        required: 'This field is required',
+                        pattern: { value: /^[0-9]{3,5}$/, message: 'Please insert a valid CVC' }
+                      })}
                       id="cardCVC"
-                      name="cardCVC"
-                      className='input'
+                      className={`input ${errors.cardCVC ? 'is-danger' : ''}`}
                       type="text"
                       disabled={paymentInProgress}
                       placeholder="e.g. 123"
-                      value={cardCVC}
                     />
+                    {errors.cardCVC && <p className="help is-danger">{errors.cardCVC.message}</p>}
                   </div>
                 </div>
               </div>
@@ -201,34 +248,35 @@ function BuyTicketForm(props: { gig: Gig }) {
               <div className="control">
                 <label htmlFor="disclaimerAccepted" className="checkbox">
                   <input
-                    onChange={e => setDisclaimerAccepted(e.target.checked)}
+                    {...register("disclaimerAccepted", { required: 'This check is mandatory' })}
                     id="disclaimerAccepted"
-                    name="disclaimerAccepted"
                     type="checkbox"
                     disabled={paymentInProgress}
-                    checked={disclaimerAccepted}
                   />
                   {' '}I understand this is a demo site and that
                   {' '}<strong>I don't have to use a real credit card</strong> I own!
                   No attempt to charge the card will be made anyway.
+                  {errors.disclaimerAccepted && <p className="help is-danger">{errors.disclaimerAccepted.message}</p>}
                 </label>
               </div>
             </div>
 
             <div className="field">
               <div className="control">
-                <button
+                <input
                   type="submit"
-                  disabled={true}
-                  className={`button is-primary is-large ${paymentInProgress ? 'is-loading' : ''}`}
-                  onClick={e => alert('TODO')}
-                >Purchase</button>
+                  disabled={paymentInProgress}
+                  className='button is-primary is-large'
+                  value={paymentInProgress ? 'Sending request...' : 'Purchase'}
+                />
               </div>
             </div>
 
           </div>
         </div>
       </form >
+
+      <hr />
 
       {paymentResult && <div className="notification is-primary">
         <button className="delete" onClick={e => { e.preventDefault(); setPaymentResult(undefined) }}></button>
@@ -239,23 +287,8 @@ function BuyTicketForm(props: { gig: Gig }) {
       {paymentError && <div className="notification is-danger">
         <button className="delete" onClick={e => { e.preventDefault(); setPaymentError(undefined) }}></button>
         <p>Ooops, something went wrong with your payment!</p>
-        <p><small><strong>{paymentError}</strong></small></p>
+        <p><small><strong>{paymentError.message}</strong></small></p>
       </div>}
-
-      <pre>
-        {JSON.stringify({
-          gig: gig.id,
-          name,
-          email,
-          nameOnCard,
-          cardNumber,
-          cardExpiryMonth,
-          cardExpiryYear,
-          cardCVC,
-          disclaimerAccepted,
-        }, null, 2)}
-      </pre>
-
     </Fragment>
   )
 }
