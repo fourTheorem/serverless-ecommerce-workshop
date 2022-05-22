@@ -1,8 +1,12 @@
 {
   "name": "serverless-ecommerce-workshop",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "A workshop to learn how to create a simple serverless e-commerce and deploying it on AWS",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
   "type": "module",
   "scripts": {
     "test": "eslint ."
@@ -12,7 +16,7 @@
     "url": "git+https://github.com/fourTheorem/serverless-ecommerce-workshop.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "fourTheorem.com",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/fourTheorem/serverless-ecommerce-workshop/issues"
