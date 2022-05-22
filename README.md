@@ -1,5 +1,11 @@
 # Serverless e-commerce workshop
 
+[![Test](https://github.com/fourTheorem/serverless-ecommerce-workshop/actions/workflows/test.yml/badge.svg)](https://github.com/fourTheorem/serverless-ecommerce-workshop/actions/workflows/test.yml)
+
+A workshop to learn how to create a simple serverless e-commerce and deploying it on AWS
+
+---
+
 It turns out we have accidentally discovered time travel! 😱
 
 There is only one rule though: **we cannot use time travel to bet or play the lottery**! 😖
