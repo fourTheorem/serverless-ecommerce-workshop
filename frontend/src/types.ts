@@ -1,4 +1,4 @@
-export interface Gig {
+export type Gig = {
   id: string,
   bandName: string,
   city: string,
