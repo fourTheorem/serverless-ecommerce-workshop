@@ -134,3 +134,6 @@ dist
 
 ## Files created as part of the chapters that should not be committed
 /policy.json
+/index.js
+/template.yml
+/http-event-with-name.json
