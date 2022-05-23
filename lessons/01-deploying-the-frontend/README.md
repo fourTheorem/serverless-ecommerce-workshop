@@ -194,5 +194,5 @@ TODO: ...
 
 ---
 
-| [⬅️ 00 - README](/README.md) | [🏠](/README.md)| [02 - TODO ➡️](/)|
+| [⬅️ 00 - README](/README.md) | [🏠](/README.md)| [02 - Setting up DynamoDB ➡️](/lessons/02-setting-up-dynamodb/README.md)|
 |:--------------|:------:|------------------------------------------------:|

@@ -1,6 +1,6 @@
 [
   {
-    "slug": "the-queen-new-york-1977",
+    "id": "the-queen-new-york-1977",
     "bandName": "The Queen",
     "city": "New York",
     "year": "1977",
@@ -16,7 +16,7 @@
     "price": "1156.00"
   },
   {
-    "slug": "jimi-hendrix-berkeley-1970",
+    "id": "jimi-hendrix-berkeley-1970",
     "bandName": "Jimi Hendrix",
     "city": "Berkeley",
     "year": "1970",
@@ -32,7 +32,7 @@
     "price": "1253.00"
   },
   {
-    "slug": "the-beach-boys-long-beach-1961",
+    "id": "the-beach-boys-long-beach-1961",
     "bandName": "The Beach Boys",
     "city": "Long Beach",
     "year": "1961",
@@ -48,7 +48,7 @@
     "price": "1180.00"
   },
   {
-    "slug": "fleetwood-mac-st-luis-1979",
+    "id": "fleetwood-mac-st-luis-1979",
     "bandName": "Fleetwood Mac",
     "city": "St. Luis",
     "year": "1979",
@@ -64,7 +64,7 @@
     "price": "2194.00"
   },
   {
-    "slug": "joy-division-london-1979",
+    "id": "joy-division-london-1979",
     "bandName": "Joy Division",
     "city": "London",
     "year": "1979",
@@ -80,7 +80,7 @@
     "price": "1112.00"
   },
   {
-    "slug": "nirvana-cork-1991",
+    "id": "nirvana-cork-1991",
     "bandName": "Nirvana",
     "city": "Cork",
     "year": "1991",
@@ -96,7 +96,7 @@
     "price": "1666.60"
   },
   {
-    "slug": "simon-and-garfunkel-new-york-1981",
+    "id": "simon-and-garfunkel-new-york-1981",
     "bandName": "Simon and Garfunkel",
     "city": "New York",
     "year": "1981",
@@ -112,7 +112,7 @@
     "price": "1121.00"
   },
   {
-    "slug": "stone-temple-irvine-2012",
+    "id": "stone-temple-irvine-2012",
     "bandName": "Stone Temple Pilots",
     "city": "Irvine",
     "year": "2012",
@@ -128,7 +128,7 @@
     "price": "1354.00"
   },
   {
-    "slug": "the-beatles-new-york-1965",
+    "id": "the-beatles-new-york-1965",
     "bandName": "The Beatles",
     "city": "New York",
     "year": "1965",
@@ -144,7 +144,7 @@
     "price": "1221.00"
   },
   {
-    "slug": "the-doors-miami-1969",
+    "id": "the-doors-miami-1969",
     "bandName": "The Doors",
     "city": "Miami",
     "year": "1969",
@@ -160,7 +160,7 @@
     "price": "1248.00"
   },
   {
-    "slug": "ramones-davis-1979",
+    "id": "ramones-davis-1979",
     "bandName": "The Ramones",
     "city": "Davis",
     "year": "1979",
@@ -176,7 +176,7 @@
     "price": "1148.00"
   },
   {
-    "slug": "soundgarden-detroit-2017",
+    "id": "soundgarden-detroit-2017",
     "bandName": "Soundgarden",
     "city": "Detroit",
     "year": "2017",
