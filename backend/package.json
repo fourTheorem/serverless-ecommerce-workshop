@@ -1,18 +1,26 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "devDependencies": {},
+  "description": "The backend APIs for TimelessMusic (Lambda functions)",
+  "main": "src/app.js",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "compile": "npm run build"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.92",
+    "@types/node": "^17.0.13",
+    "esbuild": "^0.14.14",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.5.5"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/fourTheorem/serverless-ecommerce-workshop.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "fourTheorem",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/fourTheorem/serverless-ecommerce-workshop/issues"
   },

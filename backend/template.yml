@@ -1,0 +1,56 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: Backend api for TimelessMusic project
+
+Globals:
+  Function:
+    Timeout: 3
+    Runtime: nodejs16.x
+
+Resources:
+  listGigs:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./
+      Handler: app.listGigs
+      Events:
+        Endpoint:
+          Type: Api
+          Properties:
+            Path: /gigs
+            Method: get
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        Minify: true
+        Target: "es2020"
+        Sourcemap: true
+        EntryPoints:
+          - app.ts
+
+  gig:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./
+      Handler: app.gig
+      Events:
+        Endpoint:
+          Type: Api
+          Properties:
+            Path: /gigs/{id}
+            Method: get
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        Minify: true
+        Target: "es2020"
+        Sourcemap: true
+        EntryPoints:
+          - app.ts
+
+Outputs:
+  endpoint:
+    Description: The API Gateway endpoint for TimelessMusic
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+    Export:
+      Name: ticketless:api-endpoint

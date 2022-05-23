@@ -131,6 +131,10 @@ dist
 
 .DS_Store
 
+# SAM
+.aws-sam/
+samconfig.toml
+
 
 ## Files created as part of the chapters that should not be committed
 /policy.json
