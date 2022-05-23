@@ -130,3 +130,7 @@ dist
 .pnp.*
 
 .DS_Store
+
+
+## Files created as part of the chapters that should not be committed
+/policy.json

@@ -63,13 +63,13 @@ If all went well, you should see something like this:
 
 ```json
 {
-    "UserId": "XYZ:nameoremail",
+    "UserId": "XYZ",
     "Account": "123456789012",
-    "Arn": "arn:aws:sts::123456789012:roleArn"
+    "Arn": "arn:aws:iam::123456789012:username"
 }
 ```
 
-Finally make sure to **clone this repository** locally and run:
+Finally, make sure to **clone this repository** locally and run:
 
 ```bash
 npm install

@@ -1,6 +1,6 @@
 # 01 - Deploying the frontend
 
-## Goal
+## Goals
 
 In this lesson we will learn the basics of S3 and how to deploy a Single Page Application (our e-commerce frontend) using S3.
 
@@ -88,7 +88,9 @@ aws s3 mb s3://$FRONTEND_BUCKET
 
 > **Note**: with the first command we create a random name for the bucket using a sequence of shell commands (to minimize the likelihood that somebody else has already reserved that name). Of course, if you prefer you can leave out the randomness and try to pick a unique name yourself like: `timelessmusic-frontend-for-unicorns`.
 
-This will output something like:
+> **Note**: we also exported the generated bucket name in an environment variable called `FRONTEND_BUCKET`. So we can reference that in this terminal session in the future. For example, try running `echo $FRONTEND_BUCKET` in your terminal!
+
+The script above will output something like this:
 
 ```plain
 make_bucket: timelessmusic-frontend-abcdef
@@ -107,10 +109,33 @@ This command will list all the buckets created in your account in your default r
 
 TODO: ...
 
+```bash
+aws s3 cp frontend/dist "s3://$FRONTEND_BUCKET" --recursive
+```
+
+
+verify
+
+```bash
+aws s3 ls "s3://$FRONTEND_BUCKET" --recursive
+```
+
+
+> **Note**: another way to copy files into an S3 bucket is to use the [sync](http://docs.aws.amazon.com/cli/latest/reference/s3/sync.html) command.
+
+
 
 ## Expose the bucket as a website
 
 TODO: ...
+
+```bash
+aws s3 website "s3://$FRONTEND_BUCKET/" --index-document index.html --error-document index.html
+```
+
+```bash
+echo "http://$FRONTEND_BUCKET.s3-website-eu-west-1.amazonaws.com"
+```
 
 
 ## Bucket policies
@@ -118,9 +143,48 @@ TODO: ...
 TODO: ...
 
 
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": [
+        "s3:GetObject"
+      ],
+      "Resource": [
+        "arn:aws:s3:::<FRONTEND_BUCKET>/*"
+      ]
+    }
+  ]
+}
+```
+
+> **Warning**: be sure to replace `<FRONTEND_BUCKET>` in the policy content with your actual bucket name (e.g. `"arn:aws:s3:::<FRONTEND_BUCKET>/*"` -> `"arn:aws:s3:::timelessmusic-frontend-abcdef/*"`).
+
+
+
+```bash
+aws s3api put-bucket-policy --bucket $FRONTEND_BUCKET --policy file://policy.json
+```
+
+## What about https
+
+TODO:
+
+explains that this is not supported but achievable with cloudfront.
+
+Out of the scope for this workshop
+
+
 ## Verify
 
-TODO: ...
+If you followed all the instruction correctly you should now have a functioning frontend with some stub data running in your bucket website.
+
+Try to navigate all the different sections and make sure everything seems to work smoothly.
+
+Also try to input a random url to see if the 404 page works as it should.
 
 
 ## Summary
