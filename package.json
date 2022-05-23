@@ -9,7 +9,7 @@
   ],
   "type": "module",
   "scripts": {
-    "test": "eslint ."
+    "test": "eslint"
   },
   "repository": {
     "type": "git",
