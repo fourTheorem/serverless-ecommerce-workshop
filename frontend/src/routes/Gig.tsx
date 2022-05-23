@@ -20,7 +20,7 @@ function GigPage () {
       try {
         let url = `${settings.apiBaseUrl}/gigs/${params.id}`
         if (settings.mock) {
-          console.warn('USING MOCK DATA, configure your apiBaseUrl')
+          console.warn('Running in MOCK mode (using mock data). Update your `defaultSettings` in `src/settings.ts`')
           url = `${settings.apiBaseUrl}/mock/gigs/${params.id}.json`
         }
         const response = await fetch(url)

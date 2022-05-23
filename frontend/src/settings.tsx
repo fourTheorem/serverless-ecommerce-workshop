@@ -1,6 +1,13 @@
 import React from 'react'
 
-export const SettingsContext = React.createContext({
-  apiBaseUrl: '',
-  mock: false
-})
+type Settings = {
+  apiBaseUrl: string,
+  mock: boolean,
+}
+
+export const defaultSettings : Settings = {
+  apiBaseUrl: window.location.origin,
+  mock: true
+}
+
+export const SettingsContext = React.createContext<Settings>(defaultSettings)
