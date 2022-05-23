@@ -19,11 +19,11 @@ function GigPage () {
     (async () => {
       try {
         let url = `${settings.apiBaseUrl}/gigs/${params.id}`
-        if (settings.mock) {
-          console.warn('Running in MOCK mode (using mock data). Update your `defaultSettings` in `src/settings.ts`')
-          url = `${settings.apiBaseUrl}/mock/gigs/${params.id}.json`
+        if (!settings.apiBaseUrl) {
+          console.warn('Running in MOCK mode (using mock data)')
+          url = `${window.location.origin}/mock/gigs/${params.id}.json`
         }
-        const response = await fetch(url)
+        const response = await fetch(url, { mode: 'cors' })
         const loadedGig = (await response.json()) as Gig
         setLoading(false)
         setGig(loadedGig)

@@ -13,11 +13,11 @@ function Home () {
     (async () => {
       try {
         let url = `${settings.apiBaseUrl}/gigs`
-        if (settings.mock) {
-          console.warn('Running in MOCK mode (using mock data). Update your `defaultSettings` in `src/settings.ts`')
-          url = `${settings.apiBaseUrl}/mock/gigs.json`
+        if (!settings.apiBaseUrl) {
+          console.warn('Running in MOCK mode (using mock data)')
+          url = `${window.location.origin}/mock/gigs.json`
         }
-        const response = await fetch(url)
+        const response = await fetch(url, { mode: 'cors' })
         const loadedGigs = (await response.json()) as Gig[]
         setLoading(false)
         setGigs(loadedGigs)

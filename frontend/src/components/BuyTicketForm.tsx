@@ -67,11 +67,11 @@ function BuyTicketForm (props: { gig: Gig }) {
       setPaymentError(undefined)
 
       let responseData = {}
-      if (settings.mock) {
-        console.warn('Running in MOCK mode (using mock data). Update your `defaultSettings` in `src/settings.ts`. This will simulate a payment request with a 50% chance of succeess')
+      if (!settings.apiBaseUrl) {
+        console.warn('Running in MOCK mode (using mock data). This will simulate a payment request with a 50% chance of succeess')
         responseData = (await onSubmitMock()) as boolean
       } else {
-        const response = await fetch(`${settings.apiBaseUrl}/purchase`, { method: 'POST', body: JSON.stringify(formData) })
+        const response = await fetch(`${settings.apiBaseUrl}/purchase`, { method: 'POST', body: JSON.stringify(formData), mode: 'cors' })
         responseData = await response.json()
       }
 

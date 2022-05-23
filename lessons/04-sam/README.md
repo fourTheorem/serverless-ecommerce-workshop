@@ -34,6 +34,8 @@ Behind the scenes, when we deploy using SAM, it will then convert the template i
 
 Before starting to explore SAM let's create a new folder called `backend` and let's explore the expected file structure of the SAM project that we will create inside it:
 
+TODO: update the tree below
+
 ```plain
 .
 `-- backend
@@ -142,4 +144,37 @@ your changes should be deployed in a few seconds
 TODO: ...
 
 
+File `settings.json`:
 
+```json
+{
+  "apiBaseUrl": "https://<restapiid>.execute-api.eu-west-1.amazonaws.com/Prod"
+}
+```
+
+> **Warning**: make sure to replace `<restapiid>` with your actual API Gateway id. Also make sure not to have any trailing `/` at the end of the URL.
+
+
+```bash
+aws s3 cp settings.json "s3://$FRONTEND_BUCKET/.well-known/settings.json"
+```
+
+Now your frontend should use your newly created mock APIs.
+
+## Verify
+
+If you followed these instructions carefully, you should now be able to visit the URL of the application (from lesson 1) and see that the page is now displaying our **mock** data.
+
+If you inspect the network traffic you will also see that now the frontend application makes direct call to our new API from API Gateway.
+
+In the next lesson we will evolve our API to use the data we loaded in the DynamoDB table.
+
+
+## Summary
+
+TODO: ...
+
+---
+
+| [⬅️ 03 - APIs with Lambda](/lessons/03-apis-lambda/README.md) | [🏠](/README.md)| [05 - API with DynamoDB ➡️](/lessons/05-api-with-dynamodb/README.md)|
+|:--------------|:------:|------------------------------------------------:|
