@@ -53,10 +53,34 @@ Before getting started, make sure you have the following requirements:
  - [Docker](https://www.docker.com/)
  - [SAM / SAM Local](https://aws.amazon.com/serverless/sam/)
 
+To make sure you have everything configured correctly, you can run the following command in your terminal:
+
+```bash
+aws sts get-caller-identity
+```
+
+If all went well, you should see something like this:
+
+```json
+{
+    "UserId": "XYZ:nameoremail",
+    "Account": "123456789012",
+    "Arn": "arn:aws:sts::123456789012:roleArn"
+}
+```
+
+Finally make sure to **clone this repository** locally and run:
+
+```bash
+npm install
+```
+
+To install all the necessary dependencies.
+
 
 ## Getting started
 
-TODO: ...
+We will start by deploying a static website (our ecommerce frontend) to AWS!
 
 [➡️ Lesson 01 - Deploying the frontend](/lessons/01-deploying-the-frontend/README.md)
 
