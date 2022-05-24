@@ -24,6 +24,17 @@ I hope you had fun along the way and that's just the beginning of your Serverles
 - There are many other architectures and AWS services that can allow you to have a queue of messages to process. You might want to have a look at [DynamoDB streams](http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Streams.Lambda.html) and [Kinesis](https://aws.amazon.com/kinesis/).
 
 
+## Cleaning up
+
+If you want to delete all the resources created during this workshop from your aws account, you can do so with:
+
+```bash
+sam delete --stack-name=timelessmusic
+```
+
+Then remember to delete the `gig` DynamoDB table and the S3 bucket containing our frontend. The easiest way to do this is through the AWS Web interface.
+
+
 That's all!
 
 Well done again for getting so far! 👏
