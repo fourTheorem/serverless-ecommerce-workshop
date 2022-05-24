@@ -10,7 +10,7 @@ Globals:
     Cors:
       AllowMethods: "'GET,POST,OPTIONS'"
       AllowHeaders: "'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range'"
-      AllowOrigin: "'http://timelessmusic-frontend-r5t0sy.s3-website-eu-west-1.amazonaws.com'"
+      AllowOrigin: "'http://<FRONTEND_BUCKET>.s3-website-<AWS_REGION>.amazonaws.com'"
 
 Resources:
   listGigs:

@@ -221,5 +221,5 @@ TODO: ...
 
 ---
 
-| [⬅️ 05 - API with DynamoDB](/lessons/05-api-with-dynamodb/README.md) | [🏠](/README.md)| [07 - SQS and Lambda workers ➡️](/lessons/07-sqs-lambda-worker/README.md)|
+| [⬅️ 05 - API with DynamoDB](/lessons/05-api-with-dynamodb/README.md) | [🏠](/README.md)| [07 - Send messages to SQS ➡️](/lessons/07-send-messages-to-sqs/README.md)|
 |:--------------|:------:|------------------------------------------------:|

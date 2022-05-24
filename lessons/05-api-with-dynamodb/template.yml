@@ -67,4 +67,4 @@ Outputs:
     Description: The API Gateway endpoint for TimelessMusic
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
     Export:
-      Name: ticketless:api-endpoint
+      Name: timelessmusic:api-endpoint

@@ -9,6 +9,11 @@
     "build": "esbuild --minify --sourcemap --outdir=dist --bundle *.ts",
     "compile": "npm run build"
   },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.95.0",
+    "@aws-sdk/client-sqs": "^3.95.0",
+    "@aws-sdk/lib-dynamodb": "^3.95.0"
+  },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.92",
     "@types/node": "^17.0.13",
@@ -25,9 +30,5 @@
   "bugs": {
     "url": "https://github.com/fourTheorem/serverless-ecommerce-workshop/issues"
   },
-  "homepage": "https://github.com/fourTheorem/serverless-ecommerce-workshop#readme",
-  "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.95.0",
-    "@aws-sdk/lib-dynamodb": "^3.95.0"
-  }
+  "homepage": "https://github.com/fourTheorem/serverless-ecommerce-workshop#readme"
 }
