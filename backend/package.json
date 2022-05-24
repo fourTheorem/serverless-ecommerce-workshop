@@ -6,7 +6,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "esbuild --minify --sourcemap --outdir=dist --bundle *.ts",
+    "build": "esbuild --platform=node --minify --sourcemap --outdir=dist --bundle *.ts",
     "compile": "npm run build"
   },
   "dependencies": {
