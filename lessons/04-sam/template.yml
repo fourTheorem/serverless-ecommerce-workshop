@@ -13,13 +13,6 @@ Resources:
     Properties:
       CodeUri: ./
       Handler: app.listGigs
-      Policies:
-        - Statement:
-            - Sid: ListGigsAllowDDBScan
-              Effect: Allow
-              Action:
-                - dynamodb:Scan
-              Resource: !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/gig"
       Events:
         Endpoint:
           Type: Api
@@ -40,13 +33,6 @@ Resources:
     Properties:
       CodeUri: ./
       Handler: app.gig
-      Policies:
-        - Statement:
-            - Sid: GigsAllowDDBGetItem
-              Effect: Allow
-              Action:
-                - dynamodb:GetItem
-              Resource: !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/gig"
       Events:
         Endpoint:
           Type: Api

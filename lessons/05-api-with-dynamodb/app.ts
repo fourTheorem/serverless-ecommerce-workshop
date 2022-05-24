@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb'
 import { DynamoDBDocument, ScanCommand, GetCommand } from '@aws-sdk/lib-dynamodb'

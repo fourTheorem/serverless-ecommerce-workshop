@@ -4,6 +4,7 @@
   "description": "The backend APIs for TimelessMusic (Lambda functions)",
   "main": "src/app.js",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "esbuild --minify --sourcemap --outdir=dist --bundle *.ts",
     "compile": "npm run build"
@@ -24,5 +25,9 @@
   "bugs": {
     "url": "https://github.com/fourTheorem/serverless-ecommerce-workshop/issues"
   },
-  "homepage": "https://github.com/fourTheorem/serverless-ecommerce-workshop#readme"
+  "homepage": "https://github.com/fourTheorem/serverless-ecommerce-workshop#readme",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.95.0",
+    "@aws-sdk/lib-dynamodb": "^3.95.0"
+  }
 }
