@@ -205,15 +205,15 @@ If we look at the output of this script we might realise that the data is format
 
 ```json
 {
-    capacity: { N: '1950' },
-    collectionPoint: { S: '1030 Highlands Plaza Dr St. Louis, MO 63110, USA' },
-    collectionTime: { S: '14:00' },
-    originalDate: { S: '1979-11-05' },
-    venue: { S: 'Checkerdome' },
-    bandName: { S: 'Fleetwood Mac' },
-    city: { S: 'St. Luis' },
-    date: { S: '2019-04-30' },
-    image: { S: 'fleetwood-mac.jpg' }
+    "capacity": { "N": "1950" },
+    "collectionPoint": { "S": "1030 Highlands Plaza Dr St. Louis, MO 63110, USA" },
+    "collectionTime": { "S": "14:00" },
+    "originalDate": { "S": "1979-11-05" },
+    "venue": { "S": "Checkerdome" },
+    "bandName": { "S": "Fleetwood Mac" },
+    "city": { "S": "St. Luis" },
+    "date": { "S": "2019-04-30" },
+    "image": { "S": "fleetwood-mac.jpg" }
 }
 ```
 
@@ -260,15 +260,15 @@ At this point if we run this new command we should see a flat output:
 
 ```json
 {
-    capacity: 1950,
-    collectionPoint: '1030 Highlands Plaza Dr St. Louis, MO 63110, USA',
-    collectionTime: '14:00',
-    originalDate: '1979-11-05',
-    venue: 'Checkerdome',
-    bandName: 'Fleetwood Mac',
-    city: 'St. Luis',
-    date: '2019-04-30',
-    image: 'fleetwood-mac.jpg'
+    "capacity": 1950,
+    "collectionPoint": "1030 Highlands Plaza Dr St. Louis, MO 63110, USA",
+    "collectionTime": "14:00",
+    "originalDate": "1979-11-05",
+    "venue": "Checkerdome",
+    "bandName": "Fleetwood Mac",
+    "city": "St. Luis",
+    "date": "2019-04-30",
+    "image": "fleetwood-mac.jpg"
 }
 ```
 
