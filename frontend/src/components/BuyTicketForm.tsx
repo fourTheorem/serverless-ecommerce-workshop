@@ -71,7 +71,14 @@ function BuyTicketForm (props: { gig: Gig }) {
         console.warn('Running in MOCK mode (using mock data). This will simulate a payment request with a 50% chance of succeess')
         responseData = (await onSubmitMock()) as boolean
       } else {
-        const response = await fetch(`${settings.apiBaseUrl}/purchase`, { method: 'POST', body: JSON.stringify(formData), mode: 'cors' })
+        const response = await fetch(
+          `${settings.apiBaseUrl}/purchase`, {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify(formData),
+            mode: 'cors'
+          }
+        )
         responseData = await response.json()
       }
 
