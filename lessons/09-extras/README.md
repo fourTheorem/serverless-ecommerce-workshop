@@ -44,10 +44,6 @@ Well done again for getting so far! 👏
 
 This is what we do at [fourTheorem](https://fourtheorem.com), we help companies to move to the cloud and get the best out of it.
 
-If you are curious to learn about some of the projects we have built with our customers, you can check out some of our case studies.
+If you are curious to learn about some of the projects we have built with our customers, you can check out [some of our case studies](https://www.fourtheorem.com/case-studies).
 
-TODO: add link to case study page
-
-If you are looking for a partner to speed up your cloud journey or to improve your existing cloud deployments, give us a shout, we'd be happy to help!
-
-TODO: add link to contact page
+If you are looking for a partner to speed up your cloud journey or to improve your existing cloud deployments, [give us a shout](https://www.fourtheorem.com/contact), we'd be happy to help!
