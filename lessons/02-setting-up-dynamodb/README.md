@@ -34,8 +34,7 @@ In a table that has only a partition key, no two items can have the same partiti
 DynamoDB uses the partition key value as input to an internal hash function. The output from the hash function determines the partition in which the item will be stored. All items with the same partition key are stored together, in sorted order by sort key value.
 In a table that has a partition key and a sort key, it's possible for two items to have the same partition key value. However, those two items must have different sort key values.
 
-
-TODO: mention modelling DynamoDB tables and single table desing.
+> **Note**: Modelling DynamoDB tables for different access patterns is not an easy feat. It requires a good degree of expertise. One of the best resources to learn more about DynamoDB is [The DynamoDB book by Alex DeBrie](https://www.dynamodbbook.com/).
 
 
 ## Creating a DynamoDB table

@@ -175,7 +175,7 @@ echo "http://$FRONTEND_BUCKET.s3-website-eu-west-1.amazonaws.com"
 
 At this point if we try to open that URL we will see a nasty error message:
 
-TODO: Add actual error message or image...
+![Forbidden error message](./forbidden.png)
 
 This is because even if we have enabled the website capabilities, by default, all the objects in the bucket are **private** and the website cannot serve private objects.
 
@@ -209,7 +209,7 @@ Let's dissect this policy document to understand what its component mean:
 
   - `Version` defines the policy document version (this is pretty much a copy/paste all the time and you don't have to worry about this too much)
   - `Effect`: can be `Allow` or `Deny`. In this case we want to _enable_ a specific behaviour, so we go for `Allow`.
-  - `Principal`: TODO: explain the concept of principal
+  - `Principal`: is used to specify the principal (a user or a service) that is allowed or denied access to a resource. Because we are using `*` that literally means _this rule is for everyone/everything_.
   - `Action`: an array containing one or more actions. An action is generally a capability of a service and it comes in the form `service:Capability`. In our case we want to refer to the ability of _getting objects from S3_, so we use `s3:GetObject`.
   - `Resource`: capabilities often have an effect on specific resources. In our case we are trying to enable `s3:GetObject` but on which resources (which bucket and which objects)? We can specify those resources here as an array with one or more elements. Every element is an **ARN** (Amazon Resource Name) expression. We can use `*` to indicate a class of ARNs. In this case `arn:aws:s3:::<FRONTEND_BUCKET>` is the ARN of the bucket and with `arn:aws:s3:::<FRONTEND_BUCKET>/*` we are indicating **all the object in that bucket**.
 
@@ -228,7 +228,7 @@ Now try to refresh the browser pointing to our public website and hopefully this
 
 You might have noticed this warning on the URL bar while opening the website:
 
-TODO: add picture of unsafe warning from Chrome.
+![Chrome saying this URL is not secure](./not-secure.png)
 
 This is because S3 website only exposes the website over HTTP and it does not support HTTPS.
 
