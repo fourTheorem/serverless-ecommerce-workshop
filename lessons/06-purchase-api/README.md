@@ -119,19 +119,19 @@ sam local start-api
 Once you have done that, there are (at least) 2 ways that you can send a well formed request to your local backend:
 
   1. Use curl and send something like this:
-  ```bash
-  curl 'http://localhost:3000/purchase' \
-  -H 'content-type: application/json' \
-  --data-raw '{"gigId":"nirvana-cork-1991","name":"Alex Smith","email":"alexsmith@gmail.com","nameOnCard":"Alex Smith","cardNumber":"5454545454545454","cardExpiryMonth":"5","cardExpiryYear":"2025","cardCVC":"123","disclaimerAccepted":true}' \
-  ```
+    ```bash
+    curl 'http://localhost:3000/purchase' \
+    -H 'content-type: application/json' \
+    --data-raw '{"gigId":"nirvana-cork-1991","name":"Alex Smith","email":"alexsmith@gmail.com","nameOnCard":"Alex Smith","cardNumber":"5454545454545454","cardExpiryMonth":"5","cardExpiryYear":"2025","cardCVC":"123","disclaimerAccepted":true}'
+    ```
 
   2. Add a file called `frontend/public/.well-known/settings.json` containing:
-  ```json
-  {
-    "apiBaseUrl": "http://localhost:3000"
-  }
-  ```
-  And then start the frontend locally with `npm run dev --workspace=frontend -- --open` (from the root folder).
+    ```json
+    {
+      "apiBaseUrl": "http://localhost:3000"
+    }
+    ```
+    And then start the frontend locally with `npm run dev --workspace=frontend -- --open` (from the root folder).
 
 
 ## Exposing the new API in the template
