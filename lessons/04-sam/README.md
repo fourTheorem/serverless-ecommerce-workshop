@@ -238,9 +238,6 @@ curl localhost:3000/gigs/blah | jq .
 
 This one should give you back a 404 error.
 
-TODO: test that all the above work as expected
-
-
 
 ## Packaging and deploying the API
 
