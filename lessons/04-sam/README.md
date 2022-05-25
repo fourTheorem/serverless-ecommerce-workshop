@@ -134,6 +134,13 @@ The `Resources` section defines all the resources that are part of our applicati
 
 For every Lambda function we have an `Events` section which defines what triggers the lambda execution. In this case we want to use these Lambda function to respond to HTTP requests.
 
+`CodeUri` specifies which local folder contains all the code for the Lambda function, while `Handler` is a string that is composed by two parts (separated by a `.`):
+
+  - The filename (without extension)
+  - The function name
+
+When this lambda is invoked, the runtime will load the given file and call the given function.
+
 Finally, for every Lambda function we have a `Metadata` section. We are specifying this because we want to write our Lambda code in TypeScript so we have to tell SAM how to _build_ our TypeScript code before deploying it.
 
 > **Note**: we are using `esbuild` as a build method (an efficient TypeScript compiler written in Go). This feature is still experimental in SAM, so you'll see us using the special flag `--beta-features` to allow this capability.
