@@ -7,7 +7,7 @@ In this lesson we will learn how to send messages to an SQS queue: the first ste
 In particular we will discuss:
 
   - What SQS is
-  - How to create an SQS queue
+  - How to create an SQS queue from our SAM template
   - How to give permissions to a Lambda to send messages to a queue
   - How to share the queue URL to a Lambda using environment variables
   - How to send messages to SQS using the AWS SDK
@@ -49,13 +49,21 @@ This time, rather than creating the queue from the CLI (like we did for our S3 b
 In order to define an SQS queue we need to add the following code in our `template.yml` under the `Resources` section:
 
 ```yaml
-ticketPurchasedQueue:
-  Type: "AWS::SQS::Queue"
-  Properties:
-    QueueName: "timelessmusic-purchase"
+# ...
+Resources:
+  # ...
+  ticketPurchasedQueue:
+    Type: "AWS::SQS::Queue"
+    Properties:
+      QueueName: "timelessmusic-purchase"
+# ...
 ```
 
-TODO: ...
+This is as easy as adding a new resource. We need to specify that the resource is of type `AWS::SQS::Queue` and the only required property is the queue name.
+
+An SQS queue is generally accessed through the queue URL. It's not going to be easy for us to be able to predict in advance what that URL is going to look like, so how can we pass the URL to our `purchase` Lambda function?
+
+An easy way to do that is through environment variables. We can update the ...
 
 TODO: pass the queue URL to the `purchase` lambda using environment variables (`Environment` under `Properties`)
 
@@ -172,7 +180,7 @@ export async function purchase (event: APIGatewayProxyEvent) : Promise<APIGatewa
   return {
     statusCode: 202,
     headers: {
-      'content-type': 'application/json',
+      'Content-Type': 'application/json',
       'Access-Control-Allow-Origin': '*'
     },
     body: JSON.stringify({ ticketId })
@@ -225,10 +233,7 @@ This should output something like:
 
 The number of messages should increase if you keep purchasing new tickets!
 
-
-## Summary
-
-TODO: ...
+In the [next section](/lessons/08-worker-lambda/README.md) we will see how to write a worker Lambda that can consume and process the messages from the queue.
 
 
 ---

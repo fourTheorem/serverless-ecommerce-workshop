@@ -6,11 +6,6 @@ Globals:
   Function:
     Timeout: 3
     Runtime: nodejs16.x
-  Api:
-    Cors:
-      AllowMethods: "'GET,POST,OPTIONS'"
-      AllowHeaders: "'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range'"
-      AllowOrigin: "'http://timelessmusic-frontend-r5t0sy.s3-website-eu-west-1.amazonaws.com'"
 
 Resources:
   listGigs:
@@ -18,13 +13,6 @@ Resources:
     Properties:
       CodeUri: ./
       Handler: app.listGigs
-      Policies:
-        - Statement:
-            - Sid: ListGigsAllowDDBScan
-              Effect: Allow
-              Action:
-                - dynamodb:Scan
-              Resource: !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/gig"
       Events:
         Endpoint:
           Type: Api
@@ -45,13 +33,6 @@ Resources:
     Properties:
       CodeUri: ./
       Handler: app.gig
-      Policies:
-        - Statement:
-            - Sid: GigsAllowDDBGetItem
-              Effect: Allow
-              Action:
-                - dynamodb:GetItem
-              Resource: !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/gig"
       Events:
         Endpoint:
           Type: Api
@@ -67,68 +48,9 @@ Resources:
         EntryPoints:
           - app.ts
 
-  purchase:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: ./
-      Handler: app.purchase
-      Environment:
-        Variables:
-          SQS_QUEUE_URL: !Ref "ticketPurchasedQueue"
-      Policies:
-        - Statement:
-            - Sid: PurchaseAllowSQSSendMessage
-              Effect: Allow
-              Action:
-                - sqs:SendMessage
-              Resource: !GetAtt "ticketPurchasedQueue.Arn"
-      Events:
-        Endpoint:
-          Type: Api
-          Properties:
-            Path: /purchase
-            Method: post
-    Metadata:
-      BuildMethod: esbuild
-      BuildProperties:
-        Minify: true
-        Target: "es2020"
-        Sourcemap: true
-        EntryPoints:
-          - app.ts
-
-  worker:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: ./
-      Handler: app.worker
-      Events:
-        SQSQueueEvent:
-          Type: SQS
-          Properties:
-            Queue: !GetAtt ticketPurchasedQueue.Arn
-    Metadata:
-      BuildMethod: esbuild
-      BuildProperties:
-        Minify: true
-        Target: "es2020"
-        Sourcemap: true
-        EntryPoints:
-          - app.ts
-
-  ticketPurchasedQueue:
-    Type: "AWS::SQS::Queue"
-    Properties:
-      QueueName: "timelessmusic-purchase"
-
 Outputs:
   endpoint:
     Description: The API Gateway endpoint for TimelessMusic
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
     Export:
       Name: timelessmusic:api-endpoint
-  queueUrl:
-    Description: The URL of the ticket purchase queue
-    Value: !Ref "ticketPurchasedQueue"
-    Export:
-      Name: timelessmusic:sqs-queue

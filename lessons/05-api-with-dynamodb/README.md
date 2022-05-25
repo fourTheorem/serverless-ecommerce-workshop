@@ -9,8 +9,8 @@ In particular we will learn about:
   - Understanding policies and roles in AWS
   - How to create a role to allow our lambdas to access the data in DynamoDB
   - How to fetch the data in DynamoDB using the AWS SDK
+  - How to use the DynamoDB document client to get _clean_ (untyped) records from DynamoDB
   - How to update our Lambda code to fetch data from DynamoDB
-
 
 
 ## Understanding Policies and Roles in AWS
@@ -41,9 +41,9 @@ When deploying with SAM, by default, every Lambda gets attached a new role that 
 
 `AWSLambdaBasicExecutionRole` guarantees to the Lambda only the minimum set of privileges needed to write logs to Cloudwatch. If you try to access any other resource, your Lambda execution will simply fail with a permission error.
 
-So, what if we want to guarantee our Lambda a specific privilege, for example reading from a DynamoDB table or writing to an S3 bucket?
+So, what if we want to give our Lambda a specific privilege, for example being able to read from a DynamoDB table or writing to an S3 bucket?
 
-As you might have guessed we will need to create a new role with the needed permissions and allow the Lambda to assume that role.
+As you might have guessed, we will need to create a new role with the needed permissions and allow the Lambda to assume that role.
 
 In the next section we will see how to do that with SAM.
 
@@ -54,74 +54,68 @@ We want to update our API Lambda functions to read the data from our `gig` datab
 
 In SAM we can define roles in the `Resources` section.
 
-Let's see how a new role called `GigsApiRole` can be defined in our `template.yaml`:
-
-TODO: change this section to use inline policies as per template
+Let's see how we can update our `template.yml` to give our `listGigs` lambda permission to get data from our `gig` DynamoDB table:
 
 ```yaml
-
 # ...
-
 Resources:
-
-  # ...
-
-  GigsApiRole:
-    Type: "AWS::IAM::Role"
+  listGigs:
+    Type: AWS::Serverless::Function
     Properties:
-      ManagedPolicyArns:
-        - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-      AssumeRolePolicyDocument:
-        Version: "2012-10-17"
-        Statement:
-          - Sid: "AllowLambdaServiceToAssumeRole"
-            Effect: "Allow"
-            Action:
-              - "sts:AssumeRole"
-            Principal:
-              Service:
-                - "lambda.amazonaws.com"
+      # ...
       Policies:
-        - PolicyName: "GigsApiDynamoDBPolicy"
-          PolicyDocument:
-            Version: "2012-10-17"
-            Statement:
-              - Effect: "Allow"
-                Action:
-                  - "dynamodb:Scan"
-                  - "dynamodb:GetItem"
-                Resource: !Sub 'arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/gig'
-
+        - Statement:
+            - Sid: ListGigsAllowDDBScan
+              Effect: Allow
+              Action:
+                - dynamodb:Scan
+              Resource: !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/gig"
   # ...
 ```
 
-The first thing to notice is that a role resource has type `AWS::IAM::Role` and 3 main properties: `ManagedPolicyArns`, `AssumeRolePolicyDocument` and `Policies`.
+The new part here is the `Policies` section which allows us to attach one or more policies to the Lambda execution role.
 
-  - `ManagedPolicyArns` allows the new role to inherit already existing policies in your AWS account. We use this capability to inherit the permissions from the `AWSLambdaBasicExecutionRole`. This way Lambda functions with this role will retain the capability to write logs to Cloudwatch.
-  - `AssumeRolePolicyDocument` describes a specific policy that is needed to allow the Lambda to assume a role and inherit its permissions.
-  - `Policies` is an array of policy directly created and attached to the role (inline policies). We use this option to create a policy that guarantees the capability to perform `Scan` and `GetItem` operation on our DynamoDB `gig` table. So at this stage we are basically guaranteeing read only access to the given DynamoDB table.
+Every policy is made by one or more _statements_.
 
-This change in our SAM template will make so that the next time we deploy the packaged template the role `GigsApiRole` will be created. But this is not enough to give permissions to our Lamba functions, because we still have to *attach* the new role to our functions.
+A statement expresses specicif permissions in a format that is very similar to the policy we discuss in lesson 1 when writing our S3 bucket policy.
 
-To attach the `GigsApiRole` to our `listGigs` and `gig` functions we have to add **in both functions** a new property: `Role` which references to the new role:
+Here we are effectively allowing the lambda to perform the `dynamodb:Scan` action on the `gig` table.
 
-```yaml
-Role: !GetAtt GigsApiRole.Arn
+> **Note**: becase we created our DynamoDB table manually (using the AWS CLI), here we can _infer_ the full ARN of that table if we know the AWS region and the account id where the table was deployed. Since these will be the same region and account as per the current application we can use the `!Sub` macro to let `SAM` substitute these values for us at deployment time.
+
+In a similar fashion we need to attach a policy also to our `gig` API:
+
+```yml
+# ...
+Resources:
+  # ...
+  gig:
+    Type: AWS::Serverless::Function
+    Properties:
+      # ...
+      Policies:
+        - Statement:
+            - Sid: GigsAllowDDBGetItem
+              Effect: Allow
+              Action:
+                - dynamodb:GetItem
+              Resource: !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/gig"
+  # ...
 ```
 
-If you want to be sure you updated the template file correctly, you can compare it with the one present in this repository in [`resources/lambda/gig-api-dynamodb/`](/resources/lambda/gig-api-dynamodb/template.yaml).
+> **Note**: this time we are granting the `dynamodb:GetItem` action. This is because this particular lambda doesn't need to scan the entire table, but it just needs to be able to get an item by id. It's a good practice to keep permissions as minimal as possible (principle of least knowledge).
 
-TODO: revisit link above...
+A full version of the new template is available in [`lessons/05-api-with-dynamodb/template.yml`](/lessons/05-api-with-dynamodb/template.yml).
 
 
 At this point, if you did everything correctly, you should be able to validate and re-deploy your project (from the `backend` folder):
 
 ```bash
 sam validate
-sam deploy --guided
+sam deploy
 ```
 
-The code is not changed, so the API still returns mock data, but now the underlying Lambda functions have the permission to read from our DynamoDB table.
+The code is not changed, so the API still returns mock data, but now the underlying Lambda functions have the necessary permissions to be able to read from our DynamoDB table.
 
 In the next section we will see how to take advantage of this new capability.
 
@@ -301,13 +295,11 @@ try {
 }
 ```
 
-TODO: revisit the description below
+In this particular case we are using the `GetCommand` to be able to retrieve one item (by ID) from the table. The id is taken from the first CLI argument (`process.argv[2]`).
 
-This is a tiny bit more complicated. To do a DynamoDB query we need to use the `QueryCommand`. A query command needs to be configured with a `TableName` and a `KeyConditions`. The latter allows us to construct the _conditions_ of our query.
+> **Note**: if the item we are looking for does not exist, `result.Item` will be `undefined`.
 
-In this particular example we are getting the `gigId` as an argument from the CLI and we are configuring the query to match all the records that have exactly the `id` exactly matching `gigId` from the CLI.
-
-Try to run the script above with two different inputs:
+You can try to run the script above with two different inputs:
 
 ```bash
 node scripts/get-gig.js fleetwood-mac-st-luis-1979
@@ -331,42 +323,38 @@ While this one should print `undefined`.
 
 Now we should have acquired the needed knowledge to update our Lambda functions and make use of DynamoDB to fetch the data.
 
-In order to update the `index.js` file you can use the following template:
-
-TODO: update templates
+In order to update the `app.ts` file you can use the following template:
 
 ```javascript
-// 1. import AWS SDK
-// 2. instantiate a document client
+// ...
 
-exports.listGigs = (event, context, callback) => {
-  // 3. use the document client to perform a scan operation
-  //    on the gig table
-  //    
-  //    - if the scan fail, log the error and return a 500 response
-  //    - if the scan succeed return all the gigs in object with the key `gigs`
+// TODO ... import AWS SDK
+// TODO ... instantiate a DynamoDB client
+// TODO ... instantiate a document client wrapping the DynamoDB client
+
+export async function listGigs (event: APIGatewayProxyEvent) : Promise<APIGatewayProxyResult> {
+  // TODO ... use the document client to perform a scan operation on the gig table
+  //  - if the scan fail, log the error and return a 500 response
+  //  - if the scan succeed return all the gigs in object with the key `gigs`
   //      and a 200 response
 }
 
-exports.gig = (event, context, callback) => {
-  // 4. use the document client to get a single item from the gig
-  //    table by slug
+export async function gig (event: APIGatewayProxyEvent) : Promise<APIGatewayProxyResult> {
+  // TODO ... use the document client to get a single item from the gig table by id
   //    
-  //    - if the get fails, log the error and return a 500 response
-  //    - if the scan succeed but without results return a 404 response
-  //    - otherwise return the gig object with a 200 response
+  //  - if the get fails, log the error and return a 500 response
+  //  - if the scan succeed but without results return a 404 response
+  //  - otherwise return the gig object with a 200 response
 }
 ```
 
-TODO: ...
-
-Once you are done you can test things locally with:
+Once you are done you can test things locally with (`backend` folder):
 
 ```bash
 sam build --beta-features
 ```
 
-To build your project, and:
+To build your project, and (`backend` folder):
 
 ```bash
 sam local start-api
@@ -380,7 +368,7 @@ Then you could try the following requests:
 curl localhost:3000/gigs | jq .
 ```
 
-and
+And:
 
 ```bash
 curl localhost:3000/gigs/the-beatles-new-york-1965 | jq .
@@ -392,41 +380,44 @@ If you also implemented a 404 response you shoul try:
 curl localhost:3000/gigs/invalid | jq .
 ```
 
+> **Note**: if you feel stuck at any point you can see a working solution in [`lessons/05-api-with-dynamodb/app.ts`](/lessons/05-api-with-dynamodb/app.ts)
 
-Now to deploy your new code:
+
+Now to deploy your new code you can run (from the `backend` folder):
 
 ```bash
 sam build && sam deploy
 ```
 
-> **Warning**: before deploying, make sure that you have added the new policy to your `template.yml` and that every lambda definition has a reference to the role (`Role: !GetAtt GigsApiRole.Arn`).
-
 
 ## Debugging your deployed lambdas
 
-TODO: ...
+Now that your new implementation is deployed you should be able to send requests to your remote API Gateway and see what happens.
 
-listGigs function
+In case you get an error and you want to see the logs in real time here's a nifty SAM trick that allows you to tail the remote logs for every lambda in real time:
+
+To tail the logs for the `listGigs` function (from the `backend` folder):
+
+```bash
+sam logs --beta-features -n listGigs --stack-name timelessmusic --tail
+```
+
+And for the `gig` function:
 
 ```bash
 sam logs --beta-features -n listGigs --stack-name timelessmusic --tail
 ```
 
-or gig function
-
-```bash
-sam logs --beta-features -n listGigs --stack-name timelessmusic --tail
-```
+Make sure all goes well and you don't have permission errors!
 
 
 ## Validate
 
 If you followed all the steps correctly, you should now be able to refresh your frontend and see some real data!
 
+Now our website is starting to look cooler!
 
-## Summary
-
-TODO: ...
+In the [next lesson](/lessons/06-purchase-api/README.md) we will get to implement a new API to allow our customers to purchase tickets for our events!
 
 
 ---

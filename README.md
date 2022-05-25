@@ -30,15 +30,20 @@ This workshop will explore the following topics
 - How to write APIs with AWS Lambda and API Gateway
 - How to use DynamoDB to store the data for your APIs
 - How to process forms with AWS Lambda
-- How to publish messages (pub/sub) through SNS
 - How to store unit of works on SQS
 - How to create background workers with AWS Lambda
 - ... and a lot of other useful things, like:
-  - Serverless Application Model (SAM) and Cloudfront
+  - Serverless Application Model (SAM)
   - AWS Roles, Policies and the security model in general
   - The AWS Command Line interface
   - Some bash tricks
   - Some other cool details about AWS and Serverless
+
+
+### Disclaimers
+
+  1. While we are going to build a fully functional application (somewhat), this application is not to be considered _production-ready™️_. We'll cut a few corners along the way.
+  2. The goal is to learn the basics about AWS and Serverless (and few other related things), but we are not going to be comprehensive. We will favour an hands-on approach where possible.
 
 
 ## Requirements
@@ -51,7 +56,7 @@ Before getting started, make sure you have the following requirements:
  - [Node.js](https://nodejs.org) (v16 or higher)
  - A [bash](https://www.gnu.org/software/bash) compatible shell
  - [Docker](https://www.docker.com/)
- - [SAM / SAM Local](https://aws.amazon.com/serverless/sam/)
+ - [SAM (Serverless Application Model)](https://aws.amazon.com/serverless/sam/)
 
 To make sure you have everything configured correctly, you can run the following command in your terminal:
 

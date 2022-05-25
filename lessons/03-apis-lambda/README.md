@@ -7,58 +7,62 @@ In this lesson we will learn some of the key concepts with Lambda Functions and 
 We will learn:
 
   - The basic of AWS Lambda
-  - How to write our first AWS Lambda using Node.js
+  - How to write our first AWS Lambda using Node.js & JavaScript
   - The basic of API Gateway
-  - How to handle errors
   - The Lambda-proxy integration
+  - Get a glimpse of SAM templates and how to use SAM local to test lambda functions locally
+  - How to handle errors and how to distinguish between programmatic errors and HTTP errors
 
 
 ## AWS Lambda basics
 
-AWS Lambda is the core of *serverless compute* in the AWS cloud. The Lambda service allows you to write code (in the form of *functions*) that will be automatically executed by the runtime when specific events happen in your environment.
+AWS Lambda is one of the core services when it comes to *serverless compute* on AWS cloud. The Lambda service allows you to write code (in the form of *functions*) that will be executed by the runtime when specific events happen in your environment.
 
 These are some of the typical use cases of Lambda:
 
   - Respond to an HTTP request (through API Gateway)
-  - Process new files uploaded in an S3 bucket
+  - Process new objects uploaded in an S3 bucket
   - Process new items created (or changed) in a DynamoDB table
   - Execute some job at a scheduled time (through Cloudwatch schedules)
+  - Process messages coming from message services like SQS, SNS, Kinesis Data streams or EventBridge
 
 In this lesson we will focus on the first use case, but if you are curious about all the Lambda capabilities and benefits you can learn more on the [official documentation page](https://aws.amazon.com/documentation/lambda/).
 
 
 ## First Lambda function in Node.js
 
-A valid Node.js Lambda function needs to have a predefined signature:
+A Node.js Lambda has a very distinctive signature:
 
 ```js
 async function myLambdaFunction (event, context) {
-  // business logic here
+  // your business logic goes here
 }
 ```
 
 The important details here are `event` and `context`.
 
-A Lambda Function is generally triggered by external events such as an API call or a cron job. You can bind a Lambda to one or more events so that every time the event happens it will trigger the execution of the Lambda code.
+We mentioned that a Lambda Function is generally triggered by external events such as an API call or a cron job. You can bind a Lambda to one or more events so that every time the event happens, AWS will trigger the execution of the Lambda function.
 
-The `event` parameter will be populated with an object that describes the type of the event and provides all the relevant details (for example, what API was called and with which parameters).
+The `event` parameter will be populated with an object that describes the type of the event that triggered the Lambda execution and it provides all the relevant details (for example, what API endpoint was called and all the relevant details of the originating HTTP request).
 
-The `context` parameter will contain some details regarding the execution context (for example how long this function has been running), we generally don't need to worry much about it unless we want to enable some advanced behaviours. Most of the time, lambda functions written in Node.js don't even declare `context` in the list of arguments.
+The `context` parameter will contain some details regarding the execution context (for example how long this function has been running), we generally don't need to worry too much about it unless we want to enable some advanced behaviours. Most of the time, lambda functions written in Node.js don't even declare `context` in the list of arguments.
 
-It's also important to realise that this function is `async`. This means that we can use the `await` keyword inside the function body to handle asyncronous operations. The body of the function can also use `return` and `throw` to stop the execution and return a successful result or an error.
+It's also important to realise that this function is `async`. This means that we can use the `await` keyword inside the function body to wait for the completion of asyncronous operations. The body of the function can also use `return` and `throw` to stop the execution returning a successful result or an error.
 
-A typical Hello World Lambda will look like this (file `index.js`):
+A typical Hello World Lambda will look like this:
 
 ```js
-// index.js
+// app.mjs
 export async function hello (event) {
   return 'Hello World'
 }
 ```
 
+> **Note**: We are using ESM modules and the simplest way to get them to work in Node.js is to give files the extension `.mjs`. Alternatively, if you want to keep the `.js` extension. You also need to create a `package.json` file containing `{ "type": "module" }` in your current folder.
+
 We could run this lambda function locally by using SAM (Serverless Application Model), which we will discuss in more detail in the next section.
 
-For now just bear with me and create a file called `template.yml` (in the same folder where you created your `index.js`) with the following content:
+For now just bear with me and create a file called `template.yml` (in the same folder where you created your `app.mjs`) with the following content:
 
 ```yml
 Transform: AWS::Serverless-2016-10-31
@@ -72,10 +76,10 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: .
-      Handler: index.hello
+      Handler: app.hello
 ```
 
-Now we can run the following command:
+Now we can run the following command (in the folder where you created `app.mjs` and `template.yml`):
 
 ```bash
 sam local invoke --no-event hello
@@ -98,6 +102,8 @@ Note that `"Hello World"` in the last line. This is the output of the lambda exe
 
 So this seems to work as expected!
 
+> **Note**: it is possible to use TypeScript, when using SAM. We'll do that in the next lessons, so hold your horses!
+
 
 ## API Gateway basics
 
@@ -109,14 +115,14 @@ For the sake of this tutorial, we will use Lambda function as API Gateway integr
 
 In this case, API Gateway offers a convention-based integration mode called [lambda-proxy integration](http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-create-api-as-simple-proxy-for-lambda.html#api-gateway-proxy-integration-lambda-function-nodejs).
 
-This mode, basically provides a way to map a generic HTTP request to the JSON event that gets passed to the lambda function and expects from the lambda function a response that represents an HTTP response in a pre-defined format.
+This mode, basically provides a way to map a generic HTTP request to the event that gets passed to the lambda function and it expects from the lambda function to return a response that comforms to an HTTP response in a pre-defined format.
 
 
 ### Lambda-proxy integration input format
 
 The event received in your Lambda as result of an API call will look like the following, as defined in  [Input Format of a Lambda Function for Proxy Integration](http://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html#api-gateway-simple-proxy-for-lambda-input-format):
 
-```
+```plain
 {
   "resource": "Resource path",
   "path": "Path parameter",
@@ -141,8 +147,8 @@ Most of the time the attributes you will use from the `event` inside your lambda
 Just to understand this better, let's make an example. Let's assume we have the following API specification to update or create a specific gig:
 
 ```
-Endpoint: /gig/:slug ("slug" is a path parameter)
 Method: POST
+Endpoint: /gig/:id ("id" is a path parameter)
 ```
 
 If we issue the following request:
@@ -182,7 +188,7 @@ and provide a generate a response through your Lambda.
 
 Similarly to what we just saw for the input format, there is also a convention for the [Output Format of a Lambda Function for Proxy Integration](http://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html#api-gateway-simple-proxy-for-lambda-output-format):
 
-```
+```plain
 {
   "isBase64Encoded": true|false,
   "statusCode": httpStatusCode,
@@ -191,8 +197,7 @@ Similarly to what we just saw for the input format, there is also a convention f
 }
 ```
 
-This means that when we pass a response object to the `callback` function in our Lambda,
-the object should have the following keys:
+This means that the object returned from a Lambda function invoked by API Gateway should have the following keys:
 
   - `statusCode`: the HTTP status code (e.g. 200, 404, ...)
   - `headers`: a dictionary of response headers (e.g. `{"Access-Control-Allow-Origin": "*"}` for CORS)
@@ -201,12 +206,11 @@ the object should have the following keys:
 
 ## A smarter Hello World Lambda ready for API gateway
 
-To familiarize more with these input and output abstractions, let's re-build a simple Hello World lambda
-suitable for API Gateway Lambda proxy integration that takes a `name` as query string parameter and returns a JSON body that contains `{"message": "Hello ${name}"}`.
+To familiarize more with these input and output abstractions, let's write a new version of our simple Hello World lambda (`hello2`) suitable for API Gateway Lambda proxy integration that takes a `name` as query string parameter and returns a JSON body that contains `{"message": "Hello ${name}"}`.
 
 ```js
-// index.js
-export async function hello (event) {
+// app.mjs
+export async function hello2 (event) {
   // extract the query string parameter from the event (if not available, defaults to 'World')
   const name = event?.queryStringParameters?.name || 'World'
 
@@ -229,10 +233,26 @@ export async function hello (event) {
 }
 ```
 
+We also need to update our `template.yml` and add the definition for the new function:
+
+```yaml
+# ...
+
+Resources:
+
+  # ...
+
+  hello2:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Handler: app.hello2
+```
+
 Now, if we run our lambda without event again:
 
 ```bash
-sam local invoke --no-event hello
+sam local invoke --no-event hello2
 ```
 
 We should see the following lambda output:
@@ -254,7 +274,7 @@ Let's create an event to simulate an HTTP request passing a queryString paramete
 We can now invoke our lambda locally and pass this new event with:
 
 ```bash
-sam local invoke --event http-event-with-name.json hello
+sam local invoke --event http-event-with-name.json hello2
 ```
 
 This time the lambda should produce the following JSON output:
@@ -281,16 +301,15 @@ If we run this lambda locally with `sam local invoke` we should see an output th
 
 ```plain
 START RequestId: 0bf9b3be-e861-4eaa-92e9-5abc93ba53b4 Version: $LATEST
-2022-05-23T16:44:58.586Z	0bf9b3be-e861-4eaa-92e9-5abc93ba53b4	ERROR	Invoke Error 	{"errorType":"Error","errorMessage":"This execution failed","stack":["Error: This execution failed","    at Runtime.hello [as handler] (file:///var/task/index.js:2:9)","    at Runtime.handleOnce (file:///var/runtime/index.mjs:548:29)"]}
+2022-05-23T16:44:58.586Z	0bf9b3be-e861-4eaa-92e9-5abc93ba53b4	ERROR	Invoke Error 	{"errorType":"Error","errorMessage":"This execution failed","stack":["Error: This execution failed","    at Runtime.hello [as handler] (file:///var/task/app.mjs:2:9)","    at Runtime.handleOnce (file:///var/runtime/index.mjs:548:29)"]}
 END RequestId: 0bf9b3be-e861-4eaa-92e9-5abc93ba53b4
 REPORT RequestId: 0bf9b3be-e861-4eaa-92e9-5abc93ba53b4	Init Duration: 1.58 ms	Duration: 872.21 ms	Billed Duration: 873 ms	Memory Size: 128 MB	Max Memory Used: 128 MB
-{"errorType":"Error","errorMessage":"This execution failed","trace":["Error: This execution failed","    at Runtime.hello [as handler] (file:///var/task/index.js:2:9)","    at Runtime.handleOnce (file:///var/runtime/index.mjs:548:29)"]}
+{"errorType":"Error","errorMessage":"This execution failed","trace":["Error: This execution failed","    at Runtime.hello [as handler] (file:///var/task/app.mjs:2:9)","    at Runtime.handleOnce (file:///var/runtime/index.mjs:548:29)"]}
 ```
 
 The lambda execution simply fails as soon as the exception is thrown.
 
-
-When running this Lambda in AWS, it will also terminate the execution with an error. The error will then be logged (in Cloudwatch) and the Lambda execution marked as failed.
+When running this Lambda in AWS, it terminates the execution with an error. The error will then be logged (in CloudWatch) and the Lambda execution marked as failed.
 
 In case the Lambda was triggered by an API Gateway request event, in such case, API Gateway doesn't have a response object and doesn't really know how to report the error to the client, so it simply defaults to a `502 Bad Gateway` HTTP error and you have no way to provide a detailed error report to the client.
 
@@ -349,18 +368,14 @@ export async function hello (event) {
 }
 ```
 
-> **Warning**: When using this approach, your lambda executions are never marked as failed (in the web AWS Lambda dashboard) so, if you want reports regarding specific HTTP errors, you will have to extract those information from the logs or create CloudWatch alarms based on API Gateway metrics.
+> **Warning**: When using this approach, your lambda executions are never marked as failed (for programmatic errors) so, if you want to be aware of specific HTTP errors happening in your serverless application, you will have to extract this information from the logs or create CloudWatch alarms based on API Gateway metrics.
 
 
 ## Verify
 
 This lesson was just a playground to get confident with AWS Lambda and API Gateway. We didn't add any new piece to our project.
-In the next lesson we will use the concept learned here to start to implement the APIs that will power our application.
 
-
-## Summary
-
-TODO:
+In the [next lesson](/lessons/04-sam/README.md) we will use the concept learned here to start to implement the APIs that will power our application.
 
 
 ---

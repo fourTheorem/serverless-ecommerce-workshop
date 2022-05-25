@@ -1,0 +1,18 @@
+Transform: AWS::Serverless-2016-10-31
+
+Globals:
+  Function:
+    Runtime: nodejs16.x
+
+Resources:
+  hello:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Handler: app.hello
+
+  hello2:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Handler: app.hello2

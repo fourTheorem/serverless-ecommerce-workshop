@@ -13,7 +13,7 @@ In particular we will learn:
 
 ## 06.02 - API for tickets purchase
 
-A big part of our application is to be able to sell tickets for the gigs (everyone wants to make money, right? 🤑).
+A big part of our application is to be able to sell tickets for the gigs... everyone wants to make money, right? 🤑
 
 In every gig page, the frontend already displays a form to buy tickets at the bottom of the page.
 
@@ -22,6 +22,7 @@ In every gig page, the frontend already displays a form to buy tickets at the bo
 When you fill the form and hit the *Purchase* button, the frontend will submit the data to an API located in `/purchase` with a `POST` request.
 
 In this section we will implement the Lambda function for this endpoint.
+
 
 ### API specification
 
@@ -106,9 +107,16 @@ export async function purchase (event: APIGatewayProxyEvent) : Promise<APIGatewa
 }
 ```
 
-TODO: mention solution if you get lost
+> **Note**: if at any point you feel lost and need a little help, you can consult a working solution in [`lessons/06-purchase-api/app.ts`](/lessons/06-purchase-api/app.ts).
 
-TODO: mention how to test the solution locally
+You can test this solution locally the usual way (from the `backend` folder):
+
+```bash
+sam build --beta-features
+sam local start-api
+```
+
+TODO: add an example of curl request you could do locally
 
 
 ## Exposing the new API in the template
@@ -117,11 +125,8 @@ When you are happy with the implementation of the API, you have to expose the AP
 
 ```yaml
 # ...
-
 Resources:
-
   # ...
-
   purchase:
     Type: AWS::Serverless::Function
     Properties:
@@ -141,12 +146,13 @@ Resources:
         Sourcemap: true
         EntryPoints:
           - app.ts
+# ...
 ```
 
-At this point, we are ready to build and deploy the new version of our Application:
+At this point, we are ready to build and deploy the new version of our application:
 
 ```bash
-sam build && sam deploy
+sam build --beta-features && sam deploy
 ```
 
 
@@ -174,17 +180,13 @@ The easiest way to do this is to expand our `Global` configuration in the `templ
 
 ```yaml
 # ...
-
 Globals:
-  Function:
-    Timeout: 3
-    Runtime: nodejs16.x
+  # ...
   Api:
     Cors:
       AllowMethods: "'GET,POST,OPTIONS'"
       AllowHeaders: "'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range'"
       AllowOrigin: "'http://<FRONTEND_BUCKET>.s3-website-<AWS_REGION>.amazonaws.com'"
-
 # ...
 ```
 
@@ -210,13 +212,7 @@ If you did everything correctly you should now have the purchase form working.
 
 You can easily test it by visiting a gig page and by filling the form (you can use the *quick fill form* to speed up the process).
 
-If you see a green success message saying that the payment was processed correctly you can be happy and move to the next lesson!
-
-
-
-## Summary
-
-TODO: ...
+If you see a green success message saying that the payment was processed correctly you can be happy and move to the [next lesson](/lessons/07-send-messages-to-sqs/README.md)!
 
 
 ---

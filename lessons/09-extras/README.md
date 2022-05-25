@@ -38,3 +38,16 @@ Then remember to delete the `gig` DynamoDB table and the S3 bucket containing ou
 That's all!
 
 Well done again for getting so far! 👏
+
+
+## Do you need a partner for your cloud journey?
+
+This is what we do at [fourTheorem](https://fourtheorem.com), we help companies to move to the cloud and get the best out of it.
+
+If you are curious to learn about some of the projects we have built with our customers, you can check out some of our case studies.
+
+TODO: add link to case study page
+
+If you are looking for a partner to speed up your cloud journey or to improve your existing cloud deployments, give us a shout, we'd be happy to help!
+
+TODO: add link to contact page

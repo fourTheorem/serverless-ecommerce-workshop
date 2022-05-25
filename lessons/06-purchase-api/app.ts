@@ -15,7 +15,7 @@ export async function listGigs (event: APIGatewayProxyEvent) : Promise<APIGatewa
     return {
       statusCode: 200,
       headers: {
-        'content-type': 'application/json',
+        'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*'
       },
       body: JSON.stringify(result.Items)
@@ -25,7 +25,7 @@ export async function listGigs (event: APIGatewayProxyEvent) : Promise<APIGatewa
     return {
       statusCode: 500,
       headers: {
-        'content-type': 'application/json',
+        'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*'
       },
       body: JSON.stringify({ error: 'Could not fetch data from database' })
@@ -47,7 +47,7 @@ export async function gig (event: APIGatewayProxyEvent) : Promise<APIGatewayProx
       return {
         statusCode: 404,
         headers: {
-          'content-type': 'application/json',
+          'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': '*'
         },
         body: JSON.stringify({ error: `Gig "${id}" not found!` })
@@ -57,7 +57,7 @@ export async function gig (event: APIGatewayProxyEvent) : Promise<APIGatewayProx
     return {
       statusCode: 200,
       headers: {
-        'content-type': 'application/json',
+        'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*'
       },
       body: JSON.stringify(result.Item)
@@ -67,7 +67,7 @@ export async function gig (event: APIGatewayProxyEvent) : Promise<APIGatewayProx
     return {
       statusCode: 500,
       headers: {
-        'content-type': 'application/json',
+        'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*'
       },
       body: JSON.stringify({ error: 'Could not fetch data from database' })
@@ -96,7 +96,7 @@ export async function purchase (event: APIGatewayProxyEvent) : Promise<APIGatewa
     return {
       statusCode: 400,
       headers: {
-        'content-type': 'application/json',
+        'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*'
       },
       body: JSON.stringify({ error: 'Invalid content, expected valid JSON' })
@@ -115,7 +115,7 @@ export async function purchase (event: APIGatewayProxyEvent) : Promise<APIGatewa
     return {
       statusCode: 400,
       headers: {
-        'content-type': 'application/json',
+        'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*'
       },
       body: JSON.stringify({ error: `Invalid request: ${errors.join(', ')}` })
@@ -125,7 +125,7 @@ export async function purchase (event: APIGatewayProxyEvent) : Promise<APIGatewa
   return {
     statusCode: 202,
     headers: {
-      'content-type': 'application/json',
+      'Content-Type': 'application/json',
       'Access-Control-Allow-Origin': '*'
     },
     body: JSON.stringify({})

@@ -22,7 +22,7 @@ export async function listGigs (event: APIGatewayProxyEvent) : Promise<APIGatewa
   return {
     statusCode: 200,
     headers: {
-      'content-type': 'application/json',
+      'Content-Type': 'application/json',
       'Access-Control-Allow-Origin': '*'
     },
     body: JSON.stringify(mockGigs)
@@ -37,7 +37,7 @@ export async function gig (event: APIGatewayProxyEvent) : Promise<APIGatewayProx
     return {
       statusCode: 404,
       headers: {
-        'content-type': 'application/json',
+        'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*'
       },
       body: JSON.stringify({ error: `Gig "${id}" not found!` })
@@ -47,7 +47,7 @@ export async function gig (event: APIGatewayProxyEvent) : Promise<APIGatewayProx
   return {
     statusCode: 200,
     headers: {
-      'content-type': 'application/json',
+      'Content-Type': 'application/json',
       'Access-Control-Allow-Origin': '*'
     },
     body: JSON.stringify(gig)
