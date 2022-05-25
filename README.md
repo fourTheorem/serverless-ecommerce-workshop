@@ -6,6 +6,10 @@ A workshop to learn how to create a simple serverless e-commerce and deploying i
 
 ---
 
+## What are we going to build?
+
+![A screenshot of TimelessMusic](./screenshot.png)
+
 It turns out we have accidentally discovered time travel! 😱
 
 There is only one rule though: **we cannot use time travel to bet or play the lottery**! 😖
@@ -16,7 +20,7 @@ Well, I have an idea: since we are cloud engineers and entrepreneurs, why don't 
 
 Sounds cool, right?
 
-In this workshop we will be building a serverless e-commerce to sell the tickets for our music-time-travel business! Are you ready to get rich? 🤑
+In this workshop we will be building **TimelessMusic**, a serverless e-commerce to sell the tickets for our music-time-travel business! Are you ready to get rich? 🤑
 
 > **Warning**
 > We can't promise you'll get (economically) rich with serverless, but taking this workshop will certainly _enrich_ your skills. And who knows where that might lead you...
