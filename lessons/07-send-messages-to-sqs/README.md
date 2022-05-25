@@ -63,31 +63,56 @@ This is as easy as adding a new resource. We need to specify that the resource i
 
 An SQS queue is generally accessed through the queue URL. It's not going to be easy for us to be able to predict in advance what that URL is going to look like, so how can we pass the URL to our `purchase` Lambda function?
 
-An easy way to do that is through environment variables. We can update the ...
-
-TODO: pass the queue URL to the `purchase` lambda using environment variables (`Environment` under `Properties`)
+An easy way to do that is through environment variables. We can update the `template.yml` to introduce an environment variable called `SQS_QUEUE_URL` and map it to the actual URL.
 
 ```yaml
-Environment:
-  Variables:
-    SQS_QUEUE_URL: !Ref "ticketPurchasedQueue"
+# ...
+Resources:
+  # ...
+  purchase:
+    Type: AWS::Serverless::Function
+    Properties:
+      # ...
+      Environment:
+        Variables:
+          SQS_QUEUE_URL: !Ref "ticketPurchasedQueue"
+# ...
 ```
 
-TODO: configure lambda policy to be able to write to SQS:
+> **Note**: `!Ref "ticketPurchasedQueue"` gives us the canonical identifier for the resource `ticketPurchasedQueue` (our SQS queue), which, in this case, it is exactly the queue URL.
+
+What about permissions? Is our Lambda function going to be able to send messages to the queue if don't allow that explicitly? Of course not!
+
+So let's configure a Lambda policy to give it permission to send messages to SQS:
 
 ```yaml
-Policies:
-  - Statement:
-      - Sid: PurchaseAllowSQSSendMessage
-        Effect: Allow
-        Action:
-          - sqs:SendMessage
-        Resource: !GetAtt "ticketPurchasedQueue.Arn"
+# ...
+Resources:
+  # ...
+  purchase:
+    Type: AWS::Serverless::Function
+    Properties:
+      # ...
+      Policies:
+        - Statement:
+            - Sid: PurchaseAllowSQSSendMessage
+              Effect: Allow
+              Action:
+                - sqs:SendMessage
+              Resource: !GetAtt "ticketPurchasedQueue.Arn"
+# ...
 ```
 
-TODO: see the queue URL after a deployment:
+At this point we should be quite familiar with how policies work. We just need to be sure we pass the right action (in this case `sqs:SendMessage`) and the right resource (in this case the queue ARN which we can obtain with `!GetAtt "ticketPurchasedQueue.Arn"`)
+
+> **Note**: `!GetAtt` stands for _get attribute_ and it allows us to retrieve an attribute from a resource created by SAM/CloudFormation.
+
+> **Note**: We are effectively making our Lambda function _dependendent_ on the queue by referencing the queue URL and the queue ARN through `!Ref` and `!GetAtt`. CloudFormation is smart enough to understand that and, as long as we don't create circular dependencies, it can provision resources in the right order for us.
+
+One final thing we can do, for our convenience, is to add the queue URL in the list of outputs, so that we can use that to interact with the queue from the CLI and make sure it's actually receiving our messages:
 
 ```yaml
+# ...
 Outputs:
   # ...
   queueUrl:
@@ -97,7 +122,10 @@ Outputs:
       Name: timelessmusic:sqs-queue
 ```
 
-## Send messages to SQS using the SDK
+Enough YAML for now!
+
+
+## Sending messages to SQS using the SDK
 
 The first thing we need to do is to install the SQS client:
 
@@ -133,10 +161,12 @@ await client.send(sendMessageCommand)
 
 This is all you need to know to be able to send messages to SQS from the `purchase` Lambda function.
 
+> **Note**: we used the function `randomUUID()` from the core module `crypto` to generate a random UUID. This is a convenient way to generate collision free IDs. Something we can use to identify our tickets!
+
 
 ## Update the purchase lambda code
 
-Now let's use what we learned before to update our `purchase` Lambda code.
+Now let's use what we learned so far to update our `purchase` Lambda code.
 
 Ideally we want to send a message to SQS that contains the following information:
 
@@ -149,7 +179,7 @@ This should be enough information for us to be able to send an email to the user
 
 We should send this message to SQS only before sending a successful response (202), so in case of error, we should not do that!
 
-You can use this template as a reference to update the code of the `purchase` function:
+You can use this template as a reference to update the code of the `purchase` function in `app.ts`:
 
 ```ts
 // app.ts
