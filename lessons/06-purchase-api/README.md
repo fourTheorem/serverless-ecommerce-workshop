@@ -91,7 +91,7 @@ export async function purchase (event: APIGatewayProxyEvent) : Promise<APIGatewa
     // parse request body as JSON
     data = JSON.parse(event.body)
   } catch (err) {
-    // TODO ... if it fails to parse the json you should return a 404
+    // TODO ... if it fails to parse the json you should return a 400
   }
 
   // TODO ... Do some lightweight validation and make sure all the fields are present and that `disclaimerAccepted` is true
