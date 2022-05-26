@@ -145,14 +145,14 @@ import { SQSClient, SendMessageCommand } from '@aws-sdk/client-sqs'
 const queueUrl = process.env.SQS_QUEUE_URL
 
 // some structured data you want to send to SQS
-const message = { ticketId: randomUUID() }
+const purchaseData = { ticketId: randomUUID() }
 
 // we create an SQS client
 const client = new SQSClient({})
 // a send message command
 const sendMessageCommand = new SendMessageCommand({
   MessageBody: JSON.stringify(purchaseData),
-  QueueUrl: process.env.SQS_QUEUE_URL
+  QueueUrl: queueUrl
 })
 
 // then we send the command through the client
