@@ -171,7 +171,7 @@ This data will be available in the Lambda event:
   "method": "POST",
   "path": "/gig/u2-london",
   "pathParameters": {
-    "slug": "u2-london"
+    "id": "u2-london"
   },
   "queryStringParameters": {
     "update": "true"
