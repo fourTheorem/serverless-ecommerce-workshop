@@ -112,6 +112,7 @@ At this point, if you did everything correctly, you should be able to validate a
 
 ```bash
 sam validate
+sam build --beta-features
 sam deploy
 ```
 
