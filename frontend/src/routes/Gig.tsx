@@ -45,7 +45,7 @@ function GigPage () {
   if (gig) {
     return (
       <div className="container">
-        <div v-if="gig">
+        <div>
           <nav className="breadcrumb" aria-label="breadcrumbs">
             <ul>
               <li><Link to="/">Gigs</Link></li>
