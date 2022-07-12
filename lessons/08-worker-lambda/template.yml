@@ -72,6 +72,16 @@ Resources:
     Properties:
       CodeUri: ./
       Handler: app.purchase
+      Environment:
+        Variables:
+          SQS_QUEUE_URL: !Ref "ticketPurchasedQueue"
+      Policies:
+        - Statement:
+            - Sid: PurchaseAllowSQSSendMessage
+              Effect: Allow
+              Action:
+                - sqs:SendMessage
+              Resource: !GetAtt "ticketPurchasedQueue.Arn"
       Events:
         Endpoint:
           Type: Api
@@ -86,6 +96,11 @@ Resources:
         Sourcemap: true
         EntryPoints:
           - app.ts
+
+  ticketPurchasedQueue:
+    Type: "AWS::SQS::Queue"
+    Properties:
+      QueueName: "timelessmusic-purchase"
 
   worker:
     Type: AWS::Serverless::Function
@@ -112,3 +127,8 @@ Outputs:
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
     Export:
       Name: timelessmusic:api-endpoint
+  queueUrl:
+    Description: The URL of the ticket purchase queue
+    Value: !Ref "ticketPurchasedQueue"
+    Export:
+      Name: timelessmusic:sqs-queue
